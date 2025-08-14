@@ -1,331 +1,68 @@
-/* Dashboard container */
-.dashboard {
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
   display: flex;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-  background-color: #f7fafc;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
-/* Sidebar (Desktop) */
-.sidebar {
-  display: none;
-  flex-direction: column;
-  height: 100%;
-  background-color: #ffffff;
-  border-right: 1px solid #e2e8f0;
-  transition: width 0.3s ease-in-out;
-  width: 256px;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
-@media (min-width: 768px) {
-  .sidebar {
-    display: flex;
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
-}
-
-.sidebar-collapsed {
-  width: 80px;
-}
-
-/* Sidebar Header */
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.sidebar-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #2563eb;
-}
-
-.toggle-button {
-  padding: 8px;
-  border-radius: 8px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.toggle-button:hover {
-  background-color: #f3f4f6;
-}
-
-/* Navigation */
-.nav {
-  flex: 1;
-  padding: 8px;
-  overflow-y: auto;
-}
-
-.nav-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  border-radius: 8px;
-  color: #4b5563;
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.nav-item:hover {
-  background-color: #f3f4f6;
-}
-
-.nav-item-active {
-  background-color: #eff6ff;
-  color: #2563eb;
-}
-
-.icon-container {
-  flex-shrink: 0;
-}
-
-.nav-text {
-  margin-left: 12px;
-  font-weight: 500;
-}
-
-.icon {
-  width: 20px;
-  height: 20px;
-}
-
-/* Profile Section */
-.profile {
-  padding: 16px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.profile-info {
-  display: flex;
-  align-items: center;
-}
-
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #dbeafe;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-text {
-  color: #2563eb;
-  font-weight: 500;
-}
-
-.profile-details {
-  margin-left: 12px;
-}
-
-.profile-name {
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0;
-}
-
-.profile-email {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 0;
-}
-
-.profile-role {
-  margin-top: 8px;
-  padding: 8px;
-  font-size: 14px;
-  text-align: center;
-  background-color: #f3f4f6;
-  color: #4b5563;
-  border-radius: 4px;
-}
-
-/* Mobile Sidebar */
-.mobile-sidebar {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-.mobile-sidebar-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.mobile-sidebar-content {
-  width: 256px;
-  height: 100%;
-  background-color: #ffffff;
-  padding: 16px;
-  transform: translateX(-100%);
-  transition: transform 0.3s;
-}
-
-.mobile-sidebar-open .mobile-sidebar-content {
-  transform: translateX(0);
-}
-
-.mobile-sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-/* Main Content */
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* Mobile Header */
-.mobile-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-@media (min-width: 768px) {
-  .mobile-header {
-    display: none;
+  a:hover {
+    color: #747bff;
   }
-}
-
-.menu-button {
-  padding: 8px;
-  border-radius: 6px;
-  background: none;
-  border: none;
-  color: #4b5563;
-  cursor: pointer;
-}
-
-.menu-button:hover {
-  background-color: #f3f4f6;
-}
-
-.menu-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.mobile-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2563eb;
-}
-
-.spacer {
-  width: 40px;
-}
-
-/* Content Area */
-.content-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.content-card {
-  width: 100%;
-  max-width: 512px;
-  margin: 0 auto;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.content-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #2563eb;
-  margin: 0 0 8px;
-}
-
-.content-text {
-  color: #4b5563;
-  margin: 0;
-}
-
-/* Create Quiz Page Styles */
-.input-field {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.input-field:focus {
-  outline: none;
-  border-color: #2563eb;
-}
-
-.input-field[type="file"] {
-  padding: 4px;
-}
-
-.action-button {
-  background-color: #2563eb;
-  color: #ffffff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.action-button:hover {
-  background-color: #1e40af;
-}
-
-.message-box {
-  background-color: #f0fdf4;
-  padding: 16px;
-  margin-top: 16px;
-  border: 1px solid #bbf7d0;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.message-text {
-  color: #15803d;
-  margin-bottom: 8px;
-}
-
-.link-text {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-.space-y-4 > * + * {
-  margin-top: 16px;
-}
-
-.space-y-2 > * + * {
-  margin-top: 8px;
+  button {
+    background-color: #f9f9f9;
+  }
 }
