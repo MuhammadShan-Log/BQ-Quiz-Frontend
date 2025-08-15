@@ -2,7 +2,9 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignUp from './pages/signup.jsx';
+import Teacherdashboard from './pages/Teacherdashboard.jsx';
+import Signup from './pages/signup.jsx';
+import Studentdashboard from './pages/Studentdashboard.jsx';
 
 
 
@@ -11,8 +13,17 @@ const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <SignUp/>,
+    element: <Signup/>,
   },
+  {
+    path: "/teacher-dashboard",
+    element: <Teacherdashboard/>,
+  },
+  {
+    path: "/student-dashboard",
+    element: <Studentdashboard/>,
+  },
+  
   
 ]);
 
