@@ -5,12 +5,11 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Teacherdashboard from './pages/Teacherdashboard.jsx';
 import Signup from './pages/signup.jsx';
 import Studentdashboard from './pages/Studentdashboard.jsx';
-
+import StudentInstruction from './pages/studentinstruction/StudentInstruction.jsx';
 
 
 
 const router = createBrowserRouter([
-
   {
     path: "/",
     element: <Signup/>,
@@ -22,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/student-dashboard",
     element: <Studentdashboard/>,
+  },
+  {
+    path: "/student-instruction",
+    element: <StudentInstruction />,
   },
   
   
