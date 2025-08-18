@@ -18,6 +18,8 @@ const Signup = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
@@ -25,7 +27,6 @@ const Signup = () => {
       [name]: files ? files[0] : value,
     });
   };
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,11 +34,14 @@ const Signup = () => {
     setMessage("");
 
     try {
+      let res;
+
       if (isLogin) {
-        const res = await axios.post("http://localhost:5000/auth/login", {
+        res = await axios.post("http://localhost:5000/auth/login", {
           email: formData.email,
           password: formData.password,
         });
+
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setMessage("Login successful!");
@@ -48,10 +52,10 @@ const Signup = () => {
           navigate("/student-dashboard");
         }
 
-
       } else {
+        // ------------------- SIGNUP -------------------
         if (formData.password !== formData.confirmPassword) {
-          setMessage("invalid Password");
+          setMessage("Passwords do not match!");
           setLoading(false);
           return;
         }
@@ -74,7 +78,6 @@ const Signup = () => {
           return;
         }
 
-
         const registrationData = {
           name: formData.fullName,
           email: formData.email,
@@ -83,42 +86,38 @@ const Signup = () => {
           role: formData.role.toLowerCase(),
         };
 
+        console.log("Sending data:", registrationData);
+
+        res = await axios.post(
+          "http://localhost:5000/auth/register",
+          registrationData,
+          { headers: { "Content-Type": "application/json" } }
+        );
+
         if (res.status === 201 || res.data.success) {
           setMessage("Registration successful!");
           setTimeout(() => {
-            setIsLogin(true);
+            setIsLogin(true); // switch to login form
           }, 1500);
         } else {
           setMessage(res.data.message || "Registration failed");
         }
-        
-        console.log('Sending data:', registrationData); // Debug ke liye
-
-        const res = await axios.post(
-          "http://localhost:5000/auth/register",
-          registrationData,
-          {
-            headers: {
-              "Content-Type": "application/json"
-            },
-          }
-        );
 
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        setMessage("Registration successful!");
       }
     } catch (err) {
-
-      const errorMessage = err.response?.data?.error ||
+      const errorMessage =
+        err.response?.data?.error ||
         err.response?.data?.message ||
-        `Error ${err.response?.status}: ${err.message}`;
+        `Error ${err.response?.status || ""}: ${err.message}`;
       setMessage(errorMessage);
-
     } finally {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-50 p-8">
@@ -157,13 +156,12 @@ const Signup = () => {
                   : 'opacity-0 -translate-y-4 h-0'
                   }`}
               >
-                {/* Profile Picture temporarily disabled */}
-                {/* <input
+                 <input
                   type="file"
                   name="profilePicture"
                   onChange={handleChange}
                   className="w-full text-sm text-gray-700 mb-4"
-                /> */}
+                /> 
                 <input
                   type="text"
                   name="fullName"
@@ -250,7 +248,7 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg transition-colors duration-200 disabled:opacity-50"
+              className="w-full bg-teal-500 hover:bg-teal-600 cursor-pointer text-white py-2 rounded-lg transition-colors duration-200 disabled:opacity-50"
             >
               {loading
                 ? isLogin
