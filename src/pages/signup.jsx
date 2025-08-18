@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Signup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,6 +18,8 @@ const Signup = () => {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -51,7 +54,6 @@ const Signup = () => {
         } else {
           navigate("/student-dashboard");
         }
-
       } else {
         // ------------------- SIGNUP -------------------
         if (formData.password !== formData.confirmPassword) {
@@ -86,8 +88,6 @@ const Signup = () => {
           role: formData.role.toLowerCase(),
         };
 
-        console.log("Sending data:", registrationData);
-
         res = await axios.post(
           "http://localhost:5000/auth/register",
           registrationData,
@@ -117,60 +117,56 @@ const Signup = () => {
     }
   };
 
-
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-50 p-8">
       <div className="bg-white shadow-lg rounded-lg w-full max-w-sm border-teal-500 border-4 overflow-hidden">
         <div className="bg-teal-500 text-white text-center py-4">
-          <h2 className="text-3xl  font-extrabold font-Montserrat pb-1">Quiz Teacher Portal</h2>
-          <p className="text-md font-Montserrat"> {isLogin ? "Log in to manage your quizzes" : "Create your account to get started"}</p>
+          <h2 className="text-3xl font-extrabold font-Montserrat pb-1">
+            Quiz Teacher Portal
+          </h2>
+          <p className="text-md font-Montserrat">
+            {isLogin
+              ? "Log in to manage your quizzes"
+              : "Create your account to get started"}
+          </p>
         </div>
         <div className="p-6">
           <div className="relative flex mb-6 bg-gray-100 rounded-lg p-1">
             <div
-              className={`absolute top-1 bottom-1 w-1/2 bg-teal-500	 rounded-md shadow-sm transition-all duration-300 ease-in-out ${isLogin ? 'left-1' : 'left-[calc(50%-2px)]'
-                }`}
+              className={`absolute top-1 bottom-1 w-1/2 bg-teal-500 rounded-md shadow-sm transition-all duration-300 ease-in-out ${
+                isLogin ? "left-1" : "left-[calc(50%-2px)]"
+              }`}
             />
             <button
               onClick={() => setIsLogin(true)}
-              className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${isLogin ? 'text-white font-medium' : 'text-gray-600'
-                }`}
+              className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${
+                isLogin ? "text-white font-medium" : "text-gray-600"
+              }`}
             >
               Login
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${!isLogin ? 'text-white font-medium' : 'text-gray-600'
-                }`}
+              className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${
+                !isLogin ? "text-white font-medium" : "text-gray-600"
+              }`}
             >
               Sign Up
             </button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="overflow-hidden">
-              <div
-                className={`transition-all duration-500 ease-in-out transform ${!isLogin
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 -translate-y-4 h-0'
-                  }`}
-              >
-                 <input
-                  type="file"
-                  name="profilePicture"
-                  onChange={handleChange}
-                  className="w-full text-sm text-gray-700 mb-4"
-                /> 
+            {!isLogin && (
+              <div className="transition-all duration-500 ease-in-out">
                 <input
                   type="text"
                   name="fullName"
                   placeholder="Full Name (min 3 characters)"
                   value={formData.fullName}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 mb-4"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 outline-none focus:border-teal-500"
                   minLength={3}
-                  required={!isLogin}
+                  required
                 />
                 <input
                   type="tel"
@@ -178,32 +174,22 @@ const Signup = () => {
                   placeholder="Phone (11 digits)"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 mb-4"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 outline-none focus:border-teal-500"
                   pattern="[0-9]{11}"
                   maxLength={11}
-                  required={!isLogin}
+                  required
                 />
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 mb-4"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 outline-none focus:border-teal-500"
                 >
                   <option value="teacher">Teacher</option>
                   <option value="student">Student</option>
                 </select>
-                {/* Gender temporarily disabled  */}
-                {/* <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 mb-4"
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select> */}
               </div>
-            </div>
+            )}
 
             <input
               type="email"
@@ -211,39 +197,73 @@ const Signup = () => {
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2"
+              className="w-full border rounded-lg px-3 py-2  border-gray-300 outline-none focus:border-teal-500"
               required
             />
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Password (min 8 characters)"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2"
-              minLength={8}
-              required
-            />
-
-            <div className="overflow-hidden">
-              <div
-                className={`transition-all duration-500 ease-in-out transform ${!isLogin
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 -translate-y-4 h-0'
-                  }`}
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password (min 8 characters)"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-2  border-gray-300 outline-none focus:border-teal-500 pr-10"
+                minLength={8}
+                required
+              />
+              <span
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
               >
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2"
-                  required={!isLogin}
-                />
-              </div>
+                {showPassword ? (
+                  <AiOutlineEyeInvisible size={20} />
+                ) : (
+                  <AiOutlineEye size={20} />
+                )}
+              </span>
             </div>
+
+            {!isLogin && (
+              <>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg px-3 py-2 border-gray-300 outline-none focus:border-teal-500 pr-10"
+                    required
+                  />
+                  <span
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                  >
+                    {showConfirmPassword ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
+                  </span>
+                </div>
+                <div className="mt-6">
+                  <label
+                    className="block mb-1 text-gray-700 font-medium"
+                    htmlFor="profilePicture"
+                  >
+                    Upload Profile Picture
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    name="profilePicture"
+                    onChange={handleChange}
+                    className="w-full text-sm text-gray-700 mb-4 cursor-pointer border border-gray-300 p-2 rounded-lg focus:border-teal-500 outline-none"
+                  />
+                </div>
+              </>
+            )}
 
             <button
               type="submit"
@@ -255,13 +275,19 @@ const Signup = () => {
                   ? "Logging in..."
                   : "Signing up..."
                 : isLogin
-                  ? "Login"
-                  : "Sign Up"}
+                ? "Login"
+                : "Sign Up"}
             </button>
           </form>
 
           {message && (
-            <p className={`mt-4 text-center text-sm ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
+            <p
+              className={`mt-4 text-center text-sm ${
+                message.includes("successful")
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
+            >
               {message}
             </p>
           )}

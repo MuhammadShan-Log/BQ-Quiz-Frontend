@@ -5,7 +5,7 @@ const StudentDashboard = () => {
     <div className="min-h-screen bg-gray-100 p-6">
       <header className="bg-white shadow p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold">Student Dashboard</h1>
-        <button className="bg-teal-600 text-white px-3 py-1 rounded">Logout</button>
+        <button className="bg-teal-600 text-white px-3 py-1 rounded cursor-pointer">Logout</button>
       </header>
       <main className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-4 rounded shadow">
