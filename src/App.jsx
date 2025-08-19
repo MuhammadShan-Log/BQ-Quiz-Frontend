@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Teacherdashboard from "./pages/Teacherdashboard.jsx";
-import Signup from "./pages/Signup.jsx";
+// import Signup from "./pages/Signup.jsx";
 import Studentdashboard from "./pages/Studentdashboard.jsx";
 import CourseList from "./pages/CourseList.jsx";
+import Signup from "./pages/signup.jsx";
 
 const router = createBrowserRouter([
   {
