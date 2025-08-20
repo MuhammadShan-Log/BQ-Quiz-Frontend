@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Signup from "./pages/signup.jsx";
-import AdminLayout from "./pages/AdminLayout.jsx";
+import Signup from "./pages/Signup.jsx";
+import AdminLayout from "./layouts/AdminLayout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import CourseList from "./pages/CourseList";
 import AddQuiz from "./pages/AddQuiz.jsx";

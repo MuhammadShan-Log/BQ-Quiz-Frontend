@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import api from "../utils/api";
 
 const Signup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -40,7 +39,7 @@ const Signup = () => {
       let res;
 
       if (isLogin) {
-        res = await axios.post("http://localhost:5000/auth/login", {
+        res = await api.post("/auth/login", {
           email: formData.email,
           password: formData.password,
         });
@@ -88,17 +87,16 @@ const Signup = () => {
           role: formData.role.toLowerCase(),
         };
 
-        res = await axios.post(
-          "http://localhost:5000/auth/register",
-          registrationData,
-          { headers: { "Content-Type": "application/json" } }
+        res = await api.post(
+          "/auth/register",
+          registrationData
         );
 
         if (res.status === 201 || res.data.success) {
           setMessage("Registration successful!");
           setTimeout(() => {
             setIsLogin(true); // switch to login form
-          }, 1500);
+          }, 1000);
         } else {
           setMessage(res.data.message || "Registration failed");
         }

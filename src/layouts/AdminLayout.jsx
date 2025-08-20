@@ -306,7 +306,7 @@ const AdminLayout = () => {
     },
   ];
 
-  const studentmenu = [
+  const studentMenu = [
     {
       type: "group",
       label: "Student Menu",
@@ -357,10 +357,9 @@ const AdminLayout = () => {
 
   
   useEffect(() => { 
-    var user = JSON.parse(localStorage.getItem('user'));
-    // console.log('user', user)
+    let {role} = JSON.parse(localStorage.getItem('user'));
 
-    if (user.role == 'admin') {
+    if (role == 'admin') {
       setMenu(adminMenu)
     } else if (role == 'student') {
       setMenu(studentMenu)
