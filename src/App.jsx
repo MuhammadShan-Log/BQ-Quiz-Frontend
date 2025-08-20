@@ -1,10 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import Signup from "./pages/Signup.jsx";
- Dashboard 
-import Signup from "./pages/Signup.jsx";
+
+import Signup from "./pages/signup.jsx";
 import AdminLayout from "./pages/AdminLayout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
-import AddCourse from "./pages/AddCourse.jsx";
 import CourseList from "./pages/CourseList";
 import AddQuiz from "./pages/AddQuiz.jsx";
 import QuizList from "./pages/QuizList.jsx";
@@ -21,8 +19,7 @@ const router = createBrowserRouter([
     element: <AdminLayout />, 
     children: [
       { path: "dashboard", element: <Dashboard /> },
-      { path: "courses/add", element: <AddCourse /> },
-      { path: "courses/list", element: <CourseList /> },
+      { path: "courses", element: <CourseList /> },
       { path: "quizzes/add", element: <AddQuiz /> },
       { path: "quizzes/list", element: <QuizList /> },
       { path: "students", element: <Students /> },
