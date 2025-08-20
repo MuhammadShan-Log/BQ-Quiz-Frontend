@@ -24,7 +24,7 @@ const AdminLayout = () => {
 
   const adminMenu = [
     {
-      type: "group", // 👈 this makes it a section header
+      type: "group", 
       label: "Admin",
       children: [
         {
@@ -59,6 +59,10 @@ const AdminLayout = () => {
             {
               key: "quiz-list",
               label: <Link to="/quizzes/list">Quiz List</Link>,
+            },
+            {
+              key: "Take Quiz",
+              label: <Link to="/quizzes/take">Take Quiz</Link>,
             },
           ],
         },
