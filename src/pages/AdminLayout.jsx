@@ -61,6 +61,10 @@ const AdminLayout = () => {
               label: <Link to="/quizzes/list">Quiz List</Link>,
             },
             {
+              key: "my courses",
+              label: <Link to="/my-course">My Courses</Link>,
+            },
+            {
               key: "Take Quiz",
               label: <Link to="/quizzes/take">Take Quiz</Link>,
             },
