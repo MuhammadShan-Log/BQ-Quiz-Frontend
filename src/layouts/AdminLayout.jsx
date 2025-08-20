@@ -17,7 +17,7 @@ import { Link, Outlet } from "react-router-dom";
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = () => {
-  const [menu, setMenu] = useState()
+  const [menu, setMenu] = useState();
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -68,7 +68,6 @@ const AdminLayout = () => {
           label: <Link to="/teachers">Teachers</Link>,
         },
 
-
         {
           key: "profile",
           icon: <ProfileOutlined />,
@@ -117,7 +116,7 @@ const AdminLayout = () => {
               key: "quiz-list",
               label: <Link to="/quizzes/list">Quiz List</Link>,
             },
-          ]
+          ],
         },
 
         {
@@ -231,7 +230,6 @@ const AdminLayout = () => {
           label: <Link to="/teachers">Teachers</Link>,
         },
 
-
         {
           key: "profile",
           icon: <ProfileOutlined />,
@@ -249,10 +247,9 @@ const AdminLayout = () => {
         },
       ],
     },
-  ]
+  ];
 
   const teacherMenu = [
-    
     {
       type: "group",
       label: "Teacher Menu",
@@ -277,14 +274,14 @@ const AdminLayout = () => {
               label: <Link to="/my-course">My Course</Link>,
             },
             {
+              key: "quiz-list",
+              label: <Link to="/quizzes/list">My Quizzes</Link>,
+            },
+            {
               key: "add-quiz",
               label: <Link to="/quizzes/add">Add Quiz</Link>,
             },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
-            },
-          ]
+          ],
         },
 
         {
@@ -353,21 +350,19 @@ const AdminLayout = () => {
         },
       ],
     },
-  ]
+  ];
 
-  
-  useEffect(() => { 
-    let {role} = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    let { role } = JSON.parse(localStorage.getItem("user"));
 
-    if (role == 'admin') {
-      setMenu(adminMenu)
-    } else if (role == 'student') {
-      setMenu(studentMenu)
-    } else if (role == 'teacher') {
-      setMenu(teacherMenu)
+    if (role == "admin") {
+      setMenu(adminMenu);
+    } else if (role == "student") {
+      setMenu(studentMenu);
+    } else if (role == "teacher") {
+      setMenu(teacherMenu);
     }
-  },[])
-  
+  }, []);
 
   return (
     <Layout>

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import api from "../utils/api";
+import { useState } from "react";
 
 const Signup = () => {
   const [isLogin, setIsLogin] = useState(true);
