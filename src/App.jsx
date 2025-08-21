@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound.jsx";
 import QuizDetail from "./components/teacher/QuizDetail.jsx";
 import UpdateQuiz from "./pages/teacher/UpdateQuiz.jsx";
 import { ToastContainer } from "react-toastify";
+import TeacherDashboard from "./pages/teacher/TeacherDashboard.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Signup /> },
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     errorElement: <NotFound />,
     children: [
-      { path: "dashboard", element: <Dashboard /> },
+      { path: "dashboard", element: <TeacherDashboard /> },
       { path: "courses", element: <CourseList /> },
       { path: "quizzes/add", element: <AddQuiz /> },
       { path: "quizzes/list", element: <QuizList /> },
