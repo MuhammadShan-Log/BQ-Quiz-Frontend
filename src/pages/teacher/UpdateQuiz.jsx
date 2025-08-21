@@ -28,8 +28,6 @@ const UpdateQuiz = () => {
     const fetchQuiz = async () => {
       try {
         const { data } = await api.get(`/quizzes/quiz/${id}`);
-        console.log(data);
-
         form.setFieldsValue(data);
       } catch (err) {
         console.error(err);
@@ -67,7 +65,7 @@ const UpdateQuiz = () => {
       console.log(res);
 
       toast.success("Quiz updated successfully!");
-      // navigate(`/quizzes/list/${id}`);
+      navigate(`/quizzes/list/${id}`);
     } catch (err) {
       console.error(err);
       toast.error("Failed to update quiz");
