@@ -14,11 +14,11 @@ import {
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import api from "../../utils/api";
+import { toast } from "react-toastify";
 
 const UpdateQuiz = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [csvFile, setCsvFile] = useState(null);
 
@@ -28,24 +28,9 @@ const UpdateQuiz = () => {
     const fetchQuiz = async () => {
       try {
         const { data } = await api.get(`/quizzes/quiz/${id}`);
-        setQuiz(data);
+        console.log(data);
 
-        form.setFieldsValue({
-          title: data.title || "",
-          questions: data.questions?.map((q) => ({
-            questionText: q.questionText || "",
-            options: { ...{ a: "", b: "", c: "", d: "" }, ...q.options },
-            correctAnswer: q.correctAnswer || "",
-          })),
-          customQuestions:
-            data.customQuestions?.map((q) => {
-              try {
-                return typeof q === "string" ? JSON.parse(q) : q;
-              } catch {
-                return q;
-              }
-            }) || [],
-        });
+        form.setFieldsValue(data);
       } catch (err) {
         console.error(err);
         message.error("Failed to load quiz");
@@ -60,28 +45,32 @@ const UpdateQuiz = () => {
     const formData = new FormData();
     formData.append("title", values.title);
 
-    // Flatten custom questions before sending
-    const flattenedCustom = (values.customQuestions || []).map((q) =>
-      typeof q === "string" ? q : JSON.stringify(q)
-    );
-    formData.append("customQuestions", JSON.stringify(flattenedCustom));
+    if (values.customQuestions) {
+      formData.append(
+        "customQuestions",
+        JSON.stringify(values.customQuestions)
+      );
+    }
 
-    // Only send CSV if selected
-    if (csvFile) formData.append("file", csvFile);
-
-    if (!csvFile) {
-      formData.append("questions", JSON.stringify(values.questions || []));
+    if (csvFile) {
+      formData.append("file", csvFile);
+    } else if (values.questions) {
+      formData.append("questions", JSON.stringify(values.questions));
     }
 
     try {
       const res = await api.put(`/quizzes/quiz/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
-      message.success("Quiz updated successfully!");
-      navigate(`/quizzes/list/${id}`);
+      console.log(res);
+
+      toast.success("Quiz updated successfully!");
+      // navigate(`/quizzes/list/${id}`);
     } catch (err) {
       console.error(err);
-      message.error("Failed to update quiz");
+      toast.error("Failed to update quiz");
     }
   };
 
@@ -92,7 +81,6 @@ const UpdateQuiz = () => {
       <h1 className="text-3xl font-bold mb-6">Update Quiz</h1>
 
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        {/* Quiz Title */}
         <Form.Item
           label="Quiz Title"
           name="title"
@@ -115,7 +103,6 @@ const UpdateQuiz = () => {
         </Upload>
         {csvFile && <p className="mt-2">Selected file: {csvFile.name}</p>}
 
-        {/* Editable Questions */}
         <Divider>Edit Questions</Divider>
         <Form.List name="questions">
           {(fields, { add, remove }) => (
@@ -180,7 +167,6 @@ const UpdateQuiz = () => {
           )}
         </Form.List>
 
-        {/* Custom Questions */}
         <Divider>Custom Questions</Divider>
         <Form.List name="customQuestions">
           {(fields, { add, remove }) => (
