@@ -23,6 +23,19 @@ const QuizList = () => {
     fetchQuizzes();
   }, []);
 
+  const copyQuiz = async (id) => {
+    console.log(window.location.origin);
+    
+    try {
+      const quizLink = `${window.location.origin}/quizzes/quiz/${id}/start`;
+      await navigator.clipboard.writeText(quizLink);
+      toast.success("Quiz link copied to clipboard!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to copy quiz link");
+    }
+  };
+
   const handleQuizDelete = async (id) => {
     try {
       await api.delete(`/quizzes/quiz/${id}`);
@@ -54,6 +67,19 @@ const QuizList = () => {
             Delete
           </Button>
         </Flex>
+      ),
+    },
+    {
+      title: "Get Link",
+      key: "getlink",
+      render: (_, record) => (
+        <Button
+          color="green"
+          variant="solid"
+          onClick={() => copyQuiz(record._id)}
+        >
+          Copy
+        </Button>
       ),
     },
   ];

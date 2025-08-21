@@ -14,6 +14,7 @@ import Logout from "./pages/Logout.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import QuizDetail from "./components/teacher/QuizDetail.jsx";
 import UpdateQuiz from "./pages/teacher/UpdateQuiz.jsx";
+import StartQuiz from "./pages/student/StartQuiz.jsx";
 import { ToastContainer } from "react-toastify";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard.jsx";
 
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
       { path: "quizzes/list", element: <QuizList /> },
       { path: "quizzes/list/:id", element: <QuizDetail /> },
       { path: "quizzes/list/:id/update", element: <UpdateQuiz /> },
+      { path: "quizzes/quiz/:id/start", element: <StartQuiz /> },
       { path: "students", element: <Students /> },
       { path: "teachers", element: <Teachers /> },
       { path: "profile", element: <Profile /> },
