@@ -80,10 +80,17 @@ const Signup = () => {
           return;
         }
 
+        if (!formData.enrollmentCourseID || formData.enrollmentCourseID.trim() === "") {
+          setMessage("Enrollment Course ID is required!");
+          setLoading(false);
+          return;
+        }
+
         const registrationData = {
           name: formData.fullName,
           email: formData.email,
           phone: formData.phone,
+          enrollmentCourseID: formData.enrollmentCourseID || "",
           password: formData.password,
           role: formData.role.toLowerCase(),
         };
@@ -106,6 +113,8 @@ const Signup = () => {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
     } catch (err) {
+      console.error("Full error object:", err);
+      console.error("Error response:", err.response);
       const errorMessage =
         err.response?.data?.error ||
         err.response?.data?.message ||
@@ -132,7 +141,7 @@ const Signup = () => {
             </h2>
             <p className="text-md font-Montserrat">
               {isLogin
-                ? "Create your account to get started"
+                ? "login your account to get started"
                 : "Create your account to get started"}
             </p>
           </div>
@@ -203,6 +212,18 @@ const Signup = () => {
                 className="w-full border rounded-lg px-3 py-2  border-gray-300 outline-none focus:border-teal-500"
                 required
               />
+
+              {!isLogin && (
+                <input
+                  type="text"
+                  name="enrollmentCourseID"
+                  placeholder="Enter your enrollment Course ID"
+                  value={formData.enrollmentCourseID}
+                  onChange={handleChange}
+                  className="w-full border rounded-lg px-3 py-2  border-gray-300 outline-none focus:border-teal-500"
+                  required
+                />
+              )}
 
               <div className="relative">
                 <input
@@ -286,8 +307,8 @@ const Signup = () => {
             {message && (
               <p
                 className={`mt-4 text-center text-sm ${message.includes("successful")
-                    ? "text-green-500"
-                    : "text-red-500"
+                  ? "text-green-500"
+                  : "text-red-500"
                   }`}
               >
                 {message}

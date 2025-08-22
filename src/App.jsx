@@ -17,6 +17,7 @@ import UpdateQuiz from "./pages/teacher/UpdateQuiz.jsx";
 import StartQuiz from "./pages/student/StartQuiz.jsx";
 import { ToastContainer } from "react-toastify";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard.jsx";
+import MyCourses from "./pages/MyCourses.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Signup /> },
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
     children: [
       { path: "dashboard", element: <TeacherDashboard /> },
       { path: "courses", element: <CourseList /> },
+      { path: "/my-course", element: <MyCourses />},
       { path: "quizzes/add", element: <AddQuiz /> },
       { path: "quizzes/list", element: <QuizList /> },
       { path: "quizzes/list/:id", element: <QuizDetail /> },
