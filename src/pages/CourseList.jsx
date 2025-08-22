@@ -100,7 +100,6 @@ const CourseList = () => {
     }
   };
 
-
   // Delete course
   const handleDelete = async (id) => {
     try {

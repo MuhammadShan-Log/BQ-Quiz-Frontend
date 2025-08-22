@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Switch, Popconfirm, message } from "antd";
 
-const API_GET_STUDENTS = "http://localhost:5000/auth/users/student";
+const API_GET_STUDENTS = "http://localhost:5000/auth/users/students";
 const API_UPDATE_PROFILE = "http://localhost:5000/auth/updateprofile";
 
 const fetchStudents = async () => {
@@ -10,7 +10,7 @@ const fetchStudents = async () => {
       headers: { "Content-Type": "application/json" },
     });
     const data = await response.json();
-    return Array.isArray(data) ? data : data.users || [];
+    return Array.isArray(data.data) ? data.data : [];
   } catch (error) {
     console.error("Error fetching Students:", error);
     return [];
