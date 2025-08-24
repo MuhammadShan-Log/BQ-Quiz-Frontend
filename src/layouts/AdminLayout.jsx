@@ -112,16 +112,17 @@ const AdminLayout = () => {
           key: "teacher-courses",
           icon: <BookOutlined />,
           label: "My Courses",
-          children: [
-            {
-              key: "my-course",
-              label: <Link to="/my-course">My Course</Link>,
-            },
-            {
-              key: "assigned-courses",
-              label: <Link to="/teacher/courses">Assigned Courses</Link>,
-            },
-          ],
+          label: <Link to="/teacher/courses">My Courses</Link>,
+          // children: [
+          //   {
+          //     key: "my-course",
+          //     label: <Link to="/my-course">My Course</Link>,
+          //   },
+          //   {
+          //     key: "assigned-courses",
+          //     label: <Link to="/teacher/courses">My Courses</Link>,
+          //   },
+          // ],
         },
         {
           key: "quizzes",

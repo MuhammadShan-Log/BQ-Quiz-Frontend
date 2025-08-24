@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Table, Switch, Popconfirm, message } from "antd";
+import api from "../utils/api";
 
-const API_GET_STUDENTS = "http://localhost:5000/auth/users/students";
-const API_UPDATE_PROFILE = "http://localhost:5000/auth/updateprofile";
+const API_GET_STUDENTS = "http://localhost:5000/";
+const API_UPDATE_PROFILE = "http://localhost:5000/";
 
 const fetchStudents = async () => {
   try {
-    const response = await fetch(API_GET_STUDENTS, {
+    const response = await api.get("/auth/users/students", {
       headers: { "Content-Type": "application/json" },
     });
-    const data = await response.json();
-    return Array.isArray(data.data) ? data.data : [];
+    console.log("response", response);
+    return response.data.data || [];
   } catch (error) {
     console.error("Error fetching Students:", error);
     return [];
@@ -29,13 +30,13 @@ const Students = () => {
 
   const handleToggleStatus = async (record) => {
     try {
-      const response = await fetch(`${API_UPDATE_PROFILE}/${record._id}`, {
+      const response = await api.post(`auth/updateprofile/${record._id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: !record.status }),
       });
 
-      const result = await response.json();
+      const result = await response.data;
 
       if (response.ok) {
         message.success(result.message || "Status updated successfully!");
@@ -62,8 +63,9 @@ const Students = () => {
       dataIndex: "status",
       render: (_, record) => (
         <Popconfirm
-          title={`Are you sure to ${record.status ? "deactivate" : "activate"
-            } this account?`}
+          title={`Are you sure to ${
+            record.status ? "deactivate" : "activate"
+          } this account?`}
           onConfirm={() => handleToggleStatus(record)}
           okText="Yes"
           cancelText="No"
@@ -74,9 +76,7 @@ const Students = () => {
     },
   ];
 
-  return (
-    <Table rowKey="_id" columns={columns} dataSource={students || []} />
-  );
+  return <Table rowKey="_id" columns={columns} dataSource={students || []} />;
 };
 
 export default Students;

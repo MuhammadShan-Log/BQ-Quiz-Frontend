@@ -10,14 +10,11 @@ import {
   Switch,
   notification,
 } from "antd";
-import {
-  PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
+import api from "../utils/api";
 
-const API_URL = "http://localhost:5000/course";
+const API_URL = "http://localhost:5000/";
 
 const CourseList = () => {
   const [loading, setLoading] = useState(false);
@@ -25,14 +22,15 @@ const CourseList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [form] = Form.useForm();
+  const [userRole, setUserRole] = useState(JSON.parse(localStorage.getItem("user"))?.role);
 
   // Fetch all courses
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(API_URL);
+      const res = await api.get('/course');
       // adjust according to your API response
-      setCourses(Array.isArray(res.data) ? res.data : res.data.data || []);
+      setCourses(res ? res.data.data : []);
     } catch (error) {
       notification.error({
         message: "Error",
@@ -42,9 +40,9 @@ const CourseList = () => {
     setLoading(false);
   };
 
-
   useEffect(() => {
     fetchCourses();
+    console.log('userRole', userRole)
   }, []);
 
   // Open modal for Add/Edit
@@ -65,7 +63,7 @@ const CourseList = () => {
 
       // get user from localStorage
       const user = JSON.parse(localStorage.getItem("user"));
-      if (user?.role == 'admin') {
+      if (user?.role == "admin") {
         if (user?.id) {
           values.createdBy = user.id; // inject createdBy
         }
@@ -79,11 +77,10 @@ const CourseList = () => {
           await axios.post(API_URL, values);
           notification.success({ message: "Course added successfully" });
         }
-      } else { 
+      } else {
         notification.error({
           message: "Error",
-          description:
-            "Admin can add or edit the courses.",
+          description: "Admin can add or edit the courses.",
         });
       }
 
@@ -114,27 +111,33 @@ const CourseList = () => {
     }
   };
 
-  const columns = [
-    {
-      title: "Course Name",
-      dataIndex: "courseName",
-    },
-    {
-      title: "Description",
-      dataIndex: "courseDescription",
-    },
-    {
-      title: "Code",
-      dataIndex: "courseCode",
-    },
-    {
-      title: "Timings",
-      dataIndex: "timings",
-    },
-    {
-      title: "Days",
-      dataIndex: "days",
-    },
+  let columns = [
+  {
+    title: "Course Name",
+    dataIndex: "courseName",
+  },
+  {
+    title: "Description",
+    dataIndex: "courseDescription",
+  },
+  {
+    title: "Code",
+    dataIndex: "courseCode",
+  },
+  {
+    title: "Timings",
+    dataIndex: "timings",
+  },
+  {
+    title: "Days",
+    dataIndex: "days",
+  },
+];
+console.log("userRole is:", userRole);
+
+ if(userRole === "admin") {
+  columns = [
+    ...columns,
     {
       title: "Status",
       dataIndex: "status",
@@ -157,25 +160,27 @@ const CourseList = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger icon={<DeleteOutlined />}>
-              Delete
-            </Button>
+            <Button danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
     },
   ];
+}
+
 
   return (
     <div>
       <Space style={{ marginBottom: 16 }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => openModal()}
-        >
-          Add Course
-        </Button>
+        {userRole == "admin" && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => openModal()}
+          >
+            Add Course
+          </Button>
+        )}
       </Space>
 
       <Table
@@ -223,9 +228,7 @@ const CourseList = () => {
           <Form.Item
             label="Course Code"
             name="courseCode"
-            rules={[
-              { required: true, message: "Course code is required" },
-            ]}
+            rules={[{ required: true, message: "Course code is required" }]}
           >
             <Input />
           </Form.Item>
@@ -234,9 +237,7 @@ const CourseList = () => {
           <Form.Item
             label="Timings"
             name="timings"
-            rules={[
-              { required: true, message: "Course timings are required" },
-            ]}
+            rules={[{ required: true, message: "Course timings are required" }]}
           >
             <Input />
           </Form.Item>
@@ -245,15 +246,12 @@ const CourseList = () => {
           <Form.Item
             label="Days"
             name="days"
-            rules={[
-              { required: true, message: "Course days are required" },
-            ]}
+            rules={[{ required: true, message: "Course days are required" }]}
           >
             <Input />
           </Form.Item>
 
           {/* Created By (User ID) */}
-
 
           {/* Status */}
           <Form.Item
@@ -265,7 +263,6 @@ const CourseList = () => {
             <Switch />
           </Form.Item>
         </Form>
-
       </Modal>
     </div>
   );

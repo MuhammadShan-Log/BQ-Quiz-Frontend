@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import api from "../utils/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Signup = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,12 +26,16 @@ const Signup = () => {
 
   const fetchAvailableCourses = async () => {
     try {
-      const res = await api.get('/course/list');
-      setAvailableCourses(res.data.courses || []);
+      const res = await api.get("/course");
+      setAvailableCourses(res.data.data || []);
     } catch (error) {
-      console.error('Failed to fetch courses:', error);
+      console.error("Failed to fetch courses:", error);
     }
   };
+
+  useEffect(() => {
+    fetchAvailableCourses()
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -62,7 +66,7 @@ const Signup = () => {
         // Redirect based on role
         const userRole = res.data.user.role;
         console.log("Login successful, user role:", userRole);
-        
+
         if (userRole === "admin") {
           navigate("/dashboard");
         } else if (userRole === "teacher") {
@@ -99,7 +103,10 @@ const Signup = () => {
           return;
         }
 
-        if (!formData.enrollmentCourseID || formData.enrollmentCourseID.trim() === "") {
+        if (
+          !formData.enrollmentCourseID ||
+          formData.enrollmentCourseID.trim() === ""
+        ) {
           setMessage("Enrollment Course ID is required!");
           setLoading(false);
           return;
@@ -114,10 +121,7 @@ const Signup = () => {
           role: formData.role.toLowerCase(),
         };
 
-        res = await api.post(
-          "/auth/register",
-          registrationData
-        );
+        res = await api.post("/auth/register", registrationData);
 
         if (res.status === 201 || res.data.success) {
           setMessage("Registration successful!");
@@ -146,15 +150,16 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-purple-50 p-8">
-
       <div className="rounded-lg w-full max-w-sm  overflow-hidden">
-        <div className="bq-logo" style={{ background: 'transparent', marginBottom: '20px' }}>
-          <img src="/public/logo.png" alt="Logo" style={{ height: '150px' }} />
+        <div
+          className="bq-logo"
+          style={{ background: "transparent", marginBottom: "20px" }}
+        >
+          <img src="/public/logo.png" alt="Logo" style={{ height: "150px" }} />
         </div>
 
         <div className="bg-white">
           <div className="bg-teal-500 text-white text-center py-4">
-
             <h2 className="text-3xl font-extrabold font-Montserrat pb-1">
               Quiz Portal
             </h2>
@@ -167,20 +172,23 @@ const Signup = () => {
           <div className="p-6">
             <div className="relative flex mb-6 bg-gray-100 rounded-lg p-1">
               <div
-                className={`absolute top-1 bottom-1 w-1/2 bg-teal-500 rounded-md shadow-sm transition-all duration-300 ease-in-out ${isLogin ? "left-1" : "left-[calc(50%-2px)]"
-                  }`}
+                className={`absolute top-1 bottom-1 w-1/2 bg-teal-500 rounded-md shadow-sm transition-all duration-300 ease-in-out ${
+                  isLogin ? "left-1" : "left-[calc(50%-2px)]"
+                }`}
               />
               <button
                 onClick={() => setIsLogin(true)}
-                className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${isLogin ? "text-white font-medium" : "text-gray-600"
-                  }`}
+                className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${
+                  isLogin ? "text-white font-medium" : "text-gray-600"
+                }`}
               >
                 Login
               </button>
               <button
                 onClick={() => setIsLogin(false)}
-                className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${!isLogin ? "text-white font-medium" : "text-gray-600"
-                  }`}
+                className={`relative w-1/2 py-2 rounded-md transition-all duration-300 ease-in-out z-10 ${
+                  !isLogin ? "text-white font-medium" : "text-gray-600"
+                }`}
               >
                 Sign Up
               </button>
@@ -241,9 +249,9 @@ const Signup = () => {
                   required
                 >
                   <option value="">Select a course</option>
-                  {availableCourses.map(course => (
+                  {availableCourses.map((course) => (
                     <option key={course._id} value={course._id}>
-                      {course.name}
+                      {course.courseName}
                     </option>
                   ))}
                 </select>
@@ -285,7 +293,9 @@ const Signup = () => {
                       required
                     />
                     <span
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
                     >
                       {showConfirmPassword ? (
@@ -323,17 +333,18 @@ const Signup = () => {
                     ? "Logging in..."
                     : "Signing up..."
                   : isLogin
-                    ? "Login"
-                    : "Sign Up"}
+                  ? "Login"
+                  : "Sign Up"}
               </button>
             </form>
 
             {message && (
               <p
-                className={`mt-4 text-center text-sm ${message.includes("successful")
-                  ? "text-green-500"
-                  : "text-red-500"
-                  }`}
+                className={`mt-4 text-center text-sm ${
+                  message.includes("successful")
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
               >
                 {message}
               </p>
