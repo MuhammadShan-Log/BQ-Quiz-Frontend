@@ -32,7 +32,7 @@ const CourseAssignment = () => {
 
       console.log("API Responses:", { coursesRes, teachersRes, studentsRes }); // Debug log
 
-      setCourses(coursesRes.data?.courses || []);
+      setCourses(coursesRes.data.data || []);
       setTeachers(teachersRes.data?.users || []);
       setStudents(studentsRes.data?.users || []);
     } catch (error) {
@@ -190,7 +190,7 @@ const CourseAssignment = () => {
               <Select placeholder="Select course" loading={loading}>
                 {courses.map(course => (
                   <Option key={course._id} value={course._id}>
-                    {course.name}
+                    {course.courseName}
                   </Option>
                 ))}
               </Select>
@@ -245,7 +245,7 @@ const CourseAssignment = () => {
               <Select placeholder="Select course" loading={loading}>
                 {courses.map(course => (
                   <Option key={course._id} value={course._id}>
-                    {course.name}
+                    {course.courseName}
                   </Option>
                 ))}
               </Select>
