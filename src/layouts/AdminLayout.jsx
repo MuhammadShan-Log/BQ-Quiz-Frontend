@@ -23,167 +23,7 @@ const AdminLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const allMenu = [
-    {
-      type: "group",
-      label: "Admin Dashboard Menu",
-      children: [
-        {
-          key: "dashboard",
-          icon: <DashboardOutlined />,
-          label: <Link to="/dashboard">Dashboard</Link>,
-        },
-        {
-          key: "courses",
-          icon: <BookOutlined />,
-          label: <Link to="/courses">Courses</Link>,
-        },
-        {
-          key: "quizzes",
-          icon: <FileTextOutlined />,
-          label: "Quizzes",
-          children: [
-            {
-              key: "add-quiz",
-              label: <Link to="/quizzes/add">Add Quiz</Link>,
-            },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
-            },
-            {
-              key: "Take Quiz",
-              label: <Link to="/quizzes/take">Take Quiz</Link>,
-            },
-          ],
-        },
-        {
-          key: "students",
-          icon: <UserOutlined />,
-          label: <Link to="/students">Students</Link>,
-        },
-        {
-          key: "teachers",
-          icon: <TeamOutlined />,
-          label: <Link to="/teachers">Teachers</Link>,
-        },
 
-        {
-          key: "profile",
-          icon: <ProfileOutlined />,
-          label: <Link to="/profile">Profile</Link>,
-        },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
-        {
-          key: "logout",
-          icon: <LogoutOutlined />,
-          label: <Link to="/logout">Logout</Link>,
-        },
-      ],
-    },
-    {
-      type: "group",
-      label: "Teacher Dashboard Menu",
-      children: [
-        {
-          key: "dashboard",
-          icon: <DashboardOutlined />,
-          label: <Link to="/dashboard">Dashboard</Link>,
-        },
-        {
-          key: "students",
-          icon: <UserOutlined />,
-          label: <Link to="/students">My Students</Link>,
-        },
-        {
-          key: "my course",
-          icon: <BookOutlined />,
-          label: "Courses",
-          children: [
-            {
-              key: "my-course-1",
-              label: <Link to="/my-course">My Course</Link>,
-            },
-            {
-              key: "add-quiz",
-              label: <Link to="/quizzes/add">Add Quiz</Link>,
-            },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
-            },
-          ],
-        },
-
-        {
-          key: "profile",
-          icon: <ProfileOutlined />,
-          label: <Link to="/profile">Profile</Link>,
-        },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
-        {
-          key: "logout",
-          icon: <LogoutOutlined />,
-          label: <Link to="/logout">Logout</Link>,
-        },
-      ],
-    },
-
-    {
-      type: "group",
-      label: "Student Dashboard Menu",
-      children: [
-        {
-          key: "dashboard",
-          icon: <DashboardOutlined />,
-          label: <Link to="/dashboard">Dashboard</Link>,
-        },
-        {
-          key: "my courses",
-          icon: <BookOutlined />,
-          label: "My Course",
-          children: [
-            {
-              key: "my course",
-              label: <Link to="/my-course">Course</Link>,
-            },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
-            },
-            {
-              key: "Take Quiz",
-              label: <Link to="/quizzes/take">Take Quiz</Link>,
-            },
-          ],
-        },
-
-        {
-          key: "profile",
-          icon: <ProfileOutlined />,
-          label: <Link to="/profile">Profile</Link>,
-        },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
-        {
-          key: "logout",
-          icon: <LogoutOutlined />,
-          label: <Link to="/logout">Logout</Link>,
-        },
-      ],
-    },
-  ];
 
   const adminMenu = [
     {
@@ -196,9 +36,23 @@ const AdminLayout = () => {
           label: <Link to="/dashboard">Dashboard</Link>,
         },
         {
-          key: "courses",
+          key: "course-management",
           icon: <BookOutlined />,
-          label: <Link to="/courses">Courses</Link>,
+          label: "Course Management",
+          children: [
+            {
+              key: "all-courses",
+              label: <Link to="/courses">All Courses</Link>,
+            },
+            {
+              key: "manage-courses",
+              label: <Link to="/admin/course-management">Manage Courses</Link>,
+            },
+            {
+              key: "course-assignment",
+              label: <Link to="/admin/course-assignment">Course Assignment</Link>,
+            },
+          ],
         },
         {
           key: "quizzes",
@@ -213,33 +67,28 @@ const AdminLayout = () => {
               key: "quiz-list",
               label: <Link to="/quizzes/list">Quiz List</Link>,
             },
-            {
-              key: "Take Quiz",
-              label: <Link to="/quizzes/take">Take Quiz</Link>,
-            },
           ],
         },
         {
-          key: "students",
+          key: "users",
           icon: <UserOutlined />,
-          label: <Link to="/students">Students</Link>,
+          label: "User Management",
+          children: [
+            {
+              key: "students",
+              label: <Link to="/students">Students</Link>,
+            },
+            {
+              key: "teachers",
+              label: <Link to="/teachers">Teachers</Link>,
+            },
+          ],
         },
-        {
-          key: "teachers",
-          icon: <TeamOutlined />,
-          label: <Link to="/teachers">Teachers</Link>,
-        },
-
         {
           key: "profile",
           icon: <ProfileOutlined />,
           label: <Link to="/profile">Profile</Link>,
         },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
         {
           key: "logout",
           icon: <LogoutOutlined />,
@@ -257,7 +106,37 @@ const AdminLayout = () => {
         {
           key: "dashboard",
           icon: <DashboardOutlined />,
-          label: <Link to="/dashboard">Dashboard</Link>,
+          label: <Link to="/teacher/dashboard">Dashboard</Link>,
+        },
+        {
+          key: "teacher-courses",
+          icon: <BookOutlined />,
+          label: "My Courses",
+          children: [
+            {
+              key: "my-course",
+              label: <Link to="/my-course">My Course</Link>,
+            },
+            {
+              key: "assigned-courses",
+              label: <Link to="/teacher/courses">Assigned Courses</Link>,
+            },
+          ],
+        },
+        {
+          key: "quizzes",
+          icon: <FileTextOutlined />,
+          label: "Quiz Management",
+          children: [
+            {
+              key: "add-quiz",
+              label: <Link to="/quizzes/add">Add Quiz</Link>,
+            },
+            {
+              key: "quiz-list",
+              label: <Link to="/quizzes/list">My Quizzes</Link>,
+            },
+          ],
         },
         {
           key: "students",
@@ -265,35 +144,10 @@ const AdminLayout = () => {
           label: <Link to="/students">My Students</Link>,
         },
         {
-          key: "my course",
-          icon: <BookOutlined />,
-          label: "Courses",
-          children: [
-            {
-              key: "my-course-1",
-              label: <Link to="/my-course">My Course</Link>,
-            },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">My Quizzes</Link>,
-            },
-            {
-              key: "add-quiz",
-              label: <Link to="/quizzes/add">Add Quiz</Link>,
-            },
-          ],
-        },
-
-        {
           key: "profile",
           icon: <ProfileOutlined />,
           label: <Link to="/profile">Profile</Link>,
         },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
         {
           key: "logout",
           icon: <LogoutOutlined />,
@@ -311,38 +165,43 @@ const AdminLayout = () => {
         {
           key: "dashboard",
           icon: <DashboardOutlined />,
-          label: <Link to="/dashboard">Dashboard</Link>,
+          label: <Link to="/student/dashboard">Dashboard</Link>,
         },
         {
-          key: "my courses",
+          key: "student-courses",
           icon: <BookOutlined />,
-          label: "My Course",
+          label: "Course Management",
           children: [
             {
-              key: "my course",
-              label: <Link to="/my-course">Course</Link>,
+              key: "my-courses",
+              label: <Link to="/my-course">My Courses</Link>,
             },
             {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
-            },
-            {
-              key: "Take Quiz",
-              label: <Link to="/quizzes/take">Take Quiz</Link>,
+              key: "course-enrollment",
+              label: <Link to="/student/course-enrollment">Enroll in Courses</Link>,
             },
           ],
         },
-
+        {
+          key: "quizzes",
+          icon: <FileTextOutlined />,
+          label: "Quizzes",
+          children: [
+            {
+              key: "quiz-list",
+              label: <Link to="/quizzes/list">Available Quizzes</Link>,
+            },
+            {
+              key: "start-quiz",
+              label: <Link to="/quizzes/quiz/:id/start">Start Quiz</Link>,
+            },
+          ],
+        },
         {
           key: "profile",
           icon: <ProfileOutlined />,
           label: <Link to="/profile">Profile</Link>,
         },
-        // {
-        //   key: "change-password",
-        //   icon: <LockOutlined />,
-        //   label: <Link to="/change-password">Change Password</Link>,
-        // },
         {
           key: "logout",
           icon: <LogoutOutlined />,
@@ -353,14 +212,35 @@ const AdminLayout = () => {
   ];
 
   useEffect(() => {
-    let { role } = JSON.parse(localStorage.getItem("user"));
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      
+      console.log("AdminLayout - User:", user);
+      console.log("AdminLayout - Token:", token);
+      
+      if (!user || !user.role || !token) {
+        console.log("Missing user, role, or token, redirecting to login");
+        window.location.href = "/";
+        return;
+      }
 
-    if (role == "admin") {
-      setMenu(adminMenu);
-    } else if (role == "student") {
-      setMenu(studentMenu);
-    } else if (role == "teacher") {
-      setMenu(teacherMenu);
+      const { role } = user;
+      console.log("Current user role:", role); // Debug log
+
+      if (role === "admin") {
+        setMenu(adminMenu);
+      } else if (role === "student") {
+        setMenu(studentMenu);
+      } else if (role === "teacher") {
+        setMenu(teacherMenu);
+      } else {
+        console.error("Unknown role:", role);
+        setMenu(studentMenu); // Default fallback
+      }
+    } catch (error) {
+      console.error("Error in AdminLayout useEffect:", error);
+      window.location.href = "/";
     }
   }, []);
 

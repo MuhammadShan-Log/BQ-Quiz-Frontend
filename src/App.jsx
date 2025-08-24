@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Signup from "./pages/Signup.jsx";
+import Signup from "./pages/signup.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import CourseList from "./pages/CourseList";
+import CourseManagement from "./pages/CourseManagement.jsx";
 import AddQuiz from "./pages/teacher/AddQuiz.jsx";
 import QuizList from "./pages/teacher/QuizList.jsx";
 import Students from "./pages/Students.jsx";
@@ -17,7 +18,15 @@ import UpdateQuiz from "./pages/teacher/UpdateQuiz.jsx";
 import StartQuiz from "./pages/student/StartQuiz.jsx";
 import { ToastContainer } from "react-toastify";
 import TeacherDashboard from "./pages/teacher/TeacherDashboard.jsx";
+import StudentDashboard from "./pages/student/StudentDashboard.jsx";
 import MyCourses from "./pages/MyCourses.jsx";
+
+// Import new components
+import CourseAssignment from "./components/CourseAssignment.jsx";
+import CourseEnrollment from "./components/CourseEnrollment.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import ApiTest from "./components/ApiTest.jsx";
+import SimpleTest from "./components/SimpleTest.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Signup /> },
@@ -26,9 +35,71 @@ const router = createBrowserRouter([
     element: <AdminLayout />,
     errorElement: <NotFound />,
     children: [
-      { path: "dashboard", element: <TeacherDashboard /> },
+      // Admin Routes
+      { 
+        path: "dashboard", 
+        element: <ProtectedRoute allowedRoles={["admin"]}><Dashboard /></ProtectedRoute> 
+      },
+      { 
+        path: "admin/course-assignment", 
+        element: <ProtectedRoute allowedRoles={["admin"]}><CourseAssignment /></ProtectedRoute> 
+      },
+      { 
+        path: "admin/course-management", 
+        element: <ProtectedRoute allowedRoles={["admin"]}><CourseManagement /></ProtectedRoute> 
+      },
+      { 
+        path: "admin/api-test", 
+        element: <ProtectedRoute allowedRoles={["admin"]}><ApiTest /></ProtectedRoute> 
+      },
+      { 
+        path: "test", 
+        element: <SimpleTest />
+      },
+      
+      // Teacher Routes
+      { 
+        path: "teacher/dashboard", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherDashboard /></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/courses", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><CourseList /></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/quizzes/add", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><AddQuiz /></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/quizzes/list", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><QuizList /></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/quizzes/list/:id", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><QuizDetail /></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/quizzes/list/:id/update", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><UpdateQuiz /></ProtectedRoute> 
+      },
+      
+      // Student Routes
+      { 
+        path: "student/dashboard", 
+        element: <ProtectedRoute allowedRoles={["student"]}><StudentDashboard /></ProtectedRoute> 
+      },
+      { 
+        path: "student/course-enrollment", 
+        element: <ProtectedRoute allowedRoles={["student"]}><CourseEnrollment /></ProtectedRoute> 
+      },
+      { 
+        path: "student/quiz/:id/start", 
+        element: <ProtectedRoute allowedRoles={["student"]}><StartQuiz /></ProtectedRoute> 
+      },
+      
+      // General Routes (accessible to all roles)
       { path: "courses", element: <CourseList /> },
-      { path: "/my-course", element: <MyCourses />},
+      { path: "my-course", element: <MyCourses /> },
       { path: "quizzes/add", element: <AddQuiz /> },
       { path: "quizzes/list", element: <QuizList /> },
       { path: "quizzes/list/:id", element: <QuizDetail /> },

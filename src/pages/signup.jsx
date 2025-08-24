@@ -16,12 +16,22 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+  const [availableCourses, setAvailableCourses] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
+
+  const fetchAvailableCourses = async () => {
+    try {
+      const res = await api.get('/course/list');
+      setAvailableCourses(res.data.courses || []);
+    } catch (error) {
+      console.error('Failed to fetch courses:', error);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -49,11 +59,20 @@ const Signup = () => {
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setMessage("Login successful!");
 
-        // if (res.data.user.role === "teacher") {
-        //   navigate("/teacher-dashboard");
-        // } else {
-        // }
-        navigate("/dashboard");
+        // Redirect based on role
+        const userRole = res.data.user.role;
+        console.log("Login successful, user role:", userRole);
+        
+        if (userRole === "admin") {
+          navigate("/dashboard");
+        } else if (userRole === "teacher") {
+          navigate("/teacher/dashboard");
+        } else if (userRole === "student") {
+          navigate("/student/dashboard");
+        } else {
+          console.error("Unknown role:", userRole);
+          navigate("/dashboard"); // Default fallback
+        }
       } else {
         // ------------------- SIGNUP -------------------
         if (formData.password !== formData.confirmPassword) {
@@ -214,15 +233,20 @@ const Signup = () => {
               />
 
               {!isLogin && (
-                <input
-                  type="text"
+                <select
                   name="enrollmentCourseID"
-                  placeholder="Enter your enrollment Course ID"
                   value={formData.enrollmentCourseID}
                   onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2  border-gray-300 outline-none focus:border-teal-500"
+                  className="w-full border rounded-lg px-3 py-2 border-gray-300 outline-none focus:border-teal-500"
                   required
-                />
+                >
+                  <option value="">Select a course</option>
+                  {availableCourses.map(course => (
+                    <option key={course._id} value={course._id}>
+                      {course.name}
+                    </option>
+                  ))}
+                </select>
               )}
 
               <div className="relative">
