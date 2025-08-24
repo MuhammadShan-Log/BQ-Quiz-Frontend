@@ -1,8 +1,6 @@
 .quiz-bg {
   background: #f5f3fc;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
-  padding: 30px;
 }
 .quiz-container {
   max-width: 900px;
