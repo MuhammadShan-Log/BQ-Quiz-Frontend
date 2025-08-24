@@ -23,8 +23,6 @@ const AdminLayout = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-
-
   const adminMenu = [
     {
       type: "group",
@@ -45,27 +43,10 @@ const AdminLayout = () => {
               label: <Link to="/courses">All Courses</Link>,
             },
             {
-              key: "manage-courses",
-              label: <Link to="/admin/course-management">Manage Courses</Link>,
-            },
-            {
               key: "course-assignment",
-              label: <Link to="/admin/course-assignment">Course Assignment</Link>,
-            },
-          ],
-        },
-        {
-          key: "quizzes",
-          icon: <FileTextOutlined />,
-          label: "Quizzes",
-          children: [
-            {
-              key: "add-quiz",
-              label: <Link to="/quizzes/add">Add Quiz</Link>,
-            },
-            {
-              key: "quiz-list",
-              label: <Link to="/quizzes/list">Quiz List</Link>,
+              label: (
+                <Link to="/admin/course-assignment">Course Assignment</Link>
+              ),
             },
           ],
         },
@@ -179,7 +160,9 @@ const AdminLayout = () => {
             },
             {
               key: "course-enrollment",
-              label: <Link to="/student/course-enrollment">Enroll in Courses</Link>,
+              label: (
+                <Link to="/student/course-enrollment">Enroll in Courses</Link>
+              ),
             },
           ],
         },
@@ -216,10 +199,10 @@ const AdminLayout = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const token = localStorage.getItem("token");
-      
-      console.log("AdminLayout - User:", user);
-      console.log("AdminLayout - Token:", token);
-      
+
+      // console.log("AdminLayout - User:", user);
+      // console.log("AdminLayout - Token:", token);
+
       if (!user || !user.role || !token) {
         console.log("Missing user, role, or token, redirecting to login");
         window.location.href = "/";

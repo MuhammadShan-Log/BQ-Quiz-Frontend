@@ -1,7 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Form, Select, Button, message, Table, Tag, Space, Modal, Input } from 'antd';
-import { UserAddOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons';
-import api from '../utils/api';
+// components/CourseAssignment.jsx
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  Form,
+  Select,
+  Button,
+  Table,
+  Tag,
+  Space,
+  Modal,
+  Input,
+} from "antd";
+import { UserAddOutlined, TeamOutlined } from "@ant-design/icons";
+import api from "../utils/api";
+import { toast } from "react-toastify";
 
 const { Option } = Select;
 
@@ -11,9 +23,8 @@ const CourseAssignment = () => {
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [students, setStudents] = useState([]);
-  const [assignments, setAssignments] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalType, setModalType] = useState('teacher'); // 'teacher' or 'student'
+  const [modalType, setModalType] = useState("teacher"); // 'teacher' | 'student'
 
   useEffect(() => {
     fetchData();
@@ -22,22 +33,20 @@ const CourseAssignment = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      console.log("Fetching data..."); // Debug log
-      
       const [coursesRes, teachersRes, studentsRes] = await Promise.all([
-        api.get('/course/list'),
-        api.get('/auth/users/teachers'),
-        api.get('/auth/users/students')
+        api.get("/course"),
+        api.get("/auth/users/teachers"),
+        api.get("/auth/users/students"),
       ]);
 
-      console.log("API Responses:", { coursesRes, teachersRes, studentsRes }); // Debug log
-
-      setCourses(coursesRes.data.data || []);
-      setTeachers(teachersRes.data?.users || []);
-      setStudents(studentsRes.data?.users || []);
+      setCourses(coursesRes.data?.data || []);
+      setTeachers(teachersRes.data || []);
+      console.log(studentsRes.data?.data);
+      
+      setStudents(studentsRes.data?.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
-      message.error(`Failed to fetch data: ${error.message}`);
+      toast.error(`Failed to fetch data: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -46,20 +55,28 @@ const CourseAssignment = () => {
   const handleAssignTeacher = async (values) => {
     try {
       setLoading(true);
-      const response = await api.post('/course/assign-teacher', {
+
+      const payload = {
         courseId: values.courseId,
         teacherId: values.teacherId,
-        campusId: values.campusId || 'default',
-        assignedAt: new Date().toISOString()
-      });
-      
-      console.log('Teacher assignment response:', response.data);
-      message.success('Teacher assigned successfully!');
+      };
+      if (values.campusId) {
+        payload.campusId = values.campusId; // only if user entered something
+      }
+
+      const response = await api.post("/course/assign-teacher", payload);
+
+      toast.success(response.data?.message || "Teacher assigned successfully!");
+      setIsModalVisible(false);
       form.resetFields();
       fetchData();
     } catch (error) {
-      console.error('Teacher assignment error:', error);
-      message.error(error.response?.data?.message || 'Failed to assign teacher');
+      console.error("Teacher assignment error:", error);
+      toast.error(
+        error.response?.data?.error ||
+          error.response?.data?.message ||
+          "Failed to assign teacher"
+      );
     } finally {
       setLoading(false);
     }
@@ -68,33 +85,45 @@ const CourseAssignment = () => {
   const handleAssignStudent = async (values) => {
     try {
       setLoading(true);
-      const response = await api.post('/course/assign-student', {
+
+      const payload = {
         studentId: values.studentId,
         courseId: values.courseId,
-        campusId: values.campusId || 'default',
-        assignedAt: new Date().toISOString()
-      });
-      
-      console.log('Student assignment response:', response.data);
-      message.success('Student assigned successfully!');
+      };
+      if (values.campusId) {
+        payload.campusId = values.campusId; // only if user entered something
+      }
+
+      const response = await api.post("/course/assign-student", payload);
+
+      toast.success(response.data?.message || "Student assigned successfully!");
+      setIsModalVisible(false);
       form.resetFields();
       fetchData();
     } catch (error) {
-      console.error('Student assignment error:', error);
-      message.error(error.response?.data?.message || 'Failed to assign student');
+      console.error("Student assignment error:", error.response?.data || error);
+      toast.error(
+        error.response?.data?.error ||
+          error.response?.data?.message ||
+          "Failed to assign student"
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const showModal = (type) => {
+  const showModal = (type, record = null) => {
     setModalType(type);
     setIsModalVisible(true);
     form.resetFields();
+    if (record?._id) {
+      // Pre-select the course when opening from row action
+      form.setFieldsValue({ courseId: record._id });
+    }
   };
 
   const handleModalOk = () => {
-    form.submit();
+    form.submit(); // triggers onFinish & validation
   };
 
   const handleModalCancel = () => {
@@ -104,229 +133,152 @@ const CourseAssignment = () => {
 
   const columns = [
     {
-      title: 'Course',
-      dataIndex: 'courseName',
-      key: 'courseName',
+      title: "Course",
+      dataIndex: "courseName",
+      key: "courseName",
       render: (text, record) => (
         <div>
-          <div className="font-medium">{text}</div>
-          <div className="text-sm text-gray-500">ID: {record.courseId}</div>
+          <div className="font-medium">{record.courseName}</div>
+          <div className="text-sm text-gray-500">ID: {record._id}</div>
         </div>
-      )
+      ),
     },
     {
-      title: 'Teacher',
-      dataIndex: 'teacherName',
-      key: 'teacherName',
-      render: (text, record) => (
-        <div>
-          <div className="font-medium">{text}</div>
-          <div className="text-sm text-gray-500">{record.teacherEmail}</div>
-        </div>
-      )
+      title: "Teacher",
+      dataIndex: "teacher",
+      key: "teacher",
+      render: (teacher) =>
+        teacher ? (
+          <div>
+            <div className="font-medium">{teacher.name}</div>
+            <div className="text-sm text-gray-500">{teacher.email}</div>
+          </div>
+        ) : (
+          <Tag color="red">Not Assigned</Tag>
+        ),
     },
     {
-      title: 'Students',
-      dataIndex: 'studentCount',
-      key: 'studentCount',
-      render: (count) => (
-        <Tag color="blue">{count || 0} students</Tag>
-      )
+  title: "Enrolled Students",
+  dataIndex: "students",
+  key: "students",
+  render: (students ) =>
+    students ? (
+      <div>
+        {students.map((s) => (
+          <Tag key={s._id}>{s.name}</Tag>
+        ))}
+      </div>
+    ) : (
+      <Tag color="red">No Students</Tag>
+    ),
+},
+
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => (
+        <Tag color={status ? "green" : "red"}>
+          {status ? "Active" : "Inactive"}
+        </Tag>
+      ),
     },
     {
-      title: 'Assignment Time',
-      dataIndex: 'assignedAt',
-      key: 'assignedAt',
-      render: (time, record) => {
-        if (time) {
-          return new Date(time).toLocaleString();
-        }
-        return record.teacherAssignedAt ? new Date(record.teacherAssignedAt).toLocaleString() : 'Recently assigned';
-      }
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (time) => (time ? new Date(time).toLocaleString() : "-"),
     },
     {
-      title: 'Actions',
-      key: 'actions',
+      title: "Actions",
+      key: "actions",
       render: (_, record) => (
         <Space>
-          <Button 
-            size="small" 
-            onClick={() => showModal('student')}
+          <Button
+            size="small"
+            onClick={() => showModal("student", record)}
             icon={<UserAddOutlined />}
           >
             Add Student
           </Button>
-          <Button 
-            size="small" 
-            onClick={() => showModal('teacher')}
+          <Button
+            size="small"
+            onClick={() => showModal("teacher", record)}
             icon={<TeamOutlined />}
           >
-            Change Teacher
+            {record.teacher ? "Change Teacher" : "Assign Teacher"}
           </Button>
         </Space>
-      )
-    }
+      ),
+    },
   ];
 
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Course Assignment Management</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          Course Assignment Management
+        </h1>
         <p className="text-gray-600">Assign teachers and students to courses</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card 
-          title="Assign Teacher to Course" 
-          icon={<TeamOutlined />}
-          className="shadow-md"
-        >
-          <Form form={form} onFinish={handleAssignTeacher} layout="vertical">
-            <Form.Item
-              name="courseId"
-              label="Course"
-              rules={[{ required: true, message: 'Please select a course!' }]}
-            >
-              <Select placeholder="Select course" loading={loading}>
-                {courses.map(course => (
-                  <Option key={course._id} value={course._id}>
-                    {course.courseName}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="teacherId"
-              label="Teacher"
-              rules={[{ required: true, message: 'Please select a teacher!' }]}
-            >
-              <Select placeholder="Select teacher" loading={loading}>
-                {teachers.map(teacher => (
-                  <Option key={teacher._id} value={teacher._id}>
-                    {teacher.name} ({teacher.email})
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="campusId"
-              label="Campus ID"
-            >
-              <Input placeholder="Enter campus ID (optional)" />
-            </Form.Item>
-
-            <Form.Item>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
-                loading={loading}
-                className="w-full"
-                icon={<TeamOutlined />}
-              >
-                Assign Teacher
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-
-        <Card 
-          title="Assign Student to Course" 
-          icon={<UserAddOutlined />}
-          className="shadow-md"
-        >
-          <Form form={form} onFinish={handleAssignStudent} layout="vertical">
-            <Form.Item
-              name="courseId"
-              label="Course"
-              rules={[{ required: true, message: 'Please select a course!' }]}
-            >
-              <Select placeholder="Select course" loading={loading}>
-                {courses.map(course => (
-                  <Option key={course._id} value={course._id}>
-                    {course.courseName}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="studentId"
-              label="Student"
-              rules={[{ required: true, message: 'Please select a student!' }]}
-            >
-              <Select placeholder="Select student" loading={loading}>
-                {students.map(student => (
-                  <Option key={student._id} value={student._id}>
-                    {student.name} ({student.email})
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="campusId"
-              label="Campus ID"
-            >
-              <Input placeholder="Enter campus ID (optional)" />
-            </Form.Item>
-
-            <Form.Item>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
-                loading={loading}
-                className="w-full"
-                icon={<UserAddOutlined />}
-              >
-                Assign Student
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </div>
-
       <Card title="Course Assignments Overview" className="shadow-md">
-        <Table 
-          columns={columns} 
-          dataSource={assignments}
+        <Table
+          columns={columns}
+          dataSource={courses}
           loading={loading}
-          rowKey="courseId"
+          rowKey="_id"
           pagination={{ pageSize: 10 }}
         />
       </Card>
 
       <Modal
-        title={`${modalType === 'teacher' ? 'Assign Teacher' : 'Assign Student'} to Course`}
+        title={`${
+          modalType === "teacher" ? "Assign Teacher" : "Assign Student"
+        } to Course`}
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         confirmLoading={loading}
+        destroyOnClose
       >
-        <Form form={form} layout="vertical">
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={
+            modalType === "teacher" ? handleAssignTeacher : handleAssignStudent
+          }
+        >
           <Form.Item
             name="courseId"
             label="Course"
-            rules={[{ required: true, message: 'Please select a course!' }]}
+            rules={[{ required: true, message: "Please select a course!" }]}
           >
-            <Select placeholder="Select course">
-              {courses.map(course => (
+            <Select
+              placeholder="Select course"
+              showSearch
+              optionFilterProp="children"
+            >
+              {courses.map((course) => (
                 <Option key={course._id} value={course._id}>
-                  {course.name}
+                  {course.courseName}
                 </Option>
               ))}
             </Select>
           </Form.Item>
 
-          {modalType === 'teacher' ? (
+          {modalType === "teacher" ? (
             <Form.Item
               name="teacherId"
               label="Teacher"
-              rules={[{ required: true, message: 'Please select a teacher!' }]}
+              rules={[{ required: true, message: "Please select a teacher!" }]}
             >
-              <Select placeholder="Select teacher">
-                {teachers.map(teacher => (
+              <Select
+                placeholder="Select teacher"
+                showSearch
+                optionFilterProp="children"
+              >
+                {teachers.map((teacher) => (
                   <Option key={teacher._id} value={teacher._id}>
                     {teacher.name} ({teacher.email})
                   </Option>
@@ -337,10 +289,14 @@ const CourseAssignment = () => {
             <Form.Item
               name="studentId"
               label="Student"
-              rules={[{ required: true, message: 'Please select a student!' }]}
+              rules={[{ required: true, message: "Please select a student!" }]}
             >
-              <Select placeholder="Select student">
-                {students.map(student => (
+              <Select
+                placeholder="Select student"
+                showSearch
+                optionFilterProp="children"
+              >
+                {students.map((student) => (
                   <Option key={student._id} value={student._id}>
                     {student.name} ({student.email})
                   </Option>
@@ -349,10 +305,7 @@ const CourseAssignment = () => {
             </Form.Item>
           )}
 
-          <Form.Item
-            name="campusId"
-            label="Campus ID"
-          >
+          <Form.Item name="campusId" label="Campus ID">
             <Input placeholder="Enter campus ID (optional)" />
           </Form.Item>
         </Form>

@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Table, Switch, Popconfirm, message } from "antd";
-
-const API_GET_TEACHERS = "http://localhost:5000/auth/users/teachers";
-const API_UPDATE_PROFILE = "http://localhost:5000/auth/updateprofile";
-
-const fetchTeachers = async () => {
-  try {
-    const response = await fetch(API_GET_TEACHERS, {
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await response.json();
-    return Array.isArray(data.data) ? data.data : [];
-  } catch (error) {
-    console.error("Error fetching teachers:", error);
-    return [];
-  }
-};
+import api from "../utils/api";
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState([]);
+  console.log("On Teachers page");
+  
+  // Fetch all teachers
+  const fetchTeachers = async () => {
+    try {
+      const response = await api.get("/auth/users/teachers"); 
+      console.log(response);
+      
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error) {
+      console.error("Error fetching teachers:", error);
+      message.error("Failed to load teachers");
+      return [];
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -27,29 +27,25 @@ const Teachers = () => {
     })();
   }, []);
 
+  // Toggle teacher active/inactive
   const handleToggleStatus = async (record) => {
     try {
-      const response = await fetch(`${API_UPDATE_PROFILE}/${record._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: !record.status }),
+      const response = await api.patch(`/auth/updateprofile/${record._id}`, {
+        status: !record.status,
       });
 
-      const result = await response.json();
+      message.success(response.data?.message || "Status updated successfully!");
 
-      if (response.ok) {
-        message.success(result.message || "Status updated successfully!");
-        setTeachers((prev) =>
-          prev.map((item) =>
-            item._id === record._id ? { ...item, status: !item.status } : item
-          )
-        );
-      } else {
-        message.error(result.message || "Failed to update status");
-      }
+      setTeachers((prev) =>
+        prev.map((item) =>
+          item._id === record._id ? { ...item, status: !item.status } : item
+        )
+      );
     } catch (error) {
       console.error("Update error:", error);
-      message.error("Server error while updating status");
+      message.error(
+        error.response?.data?.message || "Server error while updating status"
+      );
     }
   };
 
@@ -62,8 +58,9 @@ const Teachers = () => {
       dataIndex: "status",
       render: (_, record) => (
         <Popconfirm
-          title={`Are you sure to ${record.status ? "deactivate" : "activate"
-            } this account?`}
+          title={`Are you sure to ${
+            record.status ? "deactivate" : "activate"
+          } this account?`}
           onConfirm={() => handleToggleStatus(record)}
           okText="Yes"
           cancelText="No"
@@ -74,9 +71,7 @@ const Teachers = () => {
     },
   ];
 
-  return (
-    <Table rowKey="_id" columns={columns} dataSource={teachers || []} />
-  );
+  return <Table rowKey="_id" columns={columns} dataSource={teachers || []} />;
 };
 
 export default Teachers;

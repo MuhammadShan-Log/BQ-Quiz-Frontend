@@ -2,14 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Switch, Popconfirm, message } from "antd";
 import api from "../utils/api";
 
-const API_GET_STUDENTS = "http://localhost:5000/";
-const API_UPDATE_PROFILE = "http://localhost:5000/";
-
 const fetchStudents = async () => {
   try {
-    const response = await api.get("/auth/users/students", {
-      headers: { "Content-Type": "application/json" },
-    });
+    const response = await api.get("/auth/users/students");
     console.log("response", response);
     return response.data.data || [];
   } catch (error) {
@@ -30,11 +25,7 @@ const Students = () => {
 
   const handleToggleStatus = async (record) => {
     try {
-      const response = await api.post(`auth/updateprofile/${record._id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: !record.status }),
-      });
+      const response = await api.patch(`auth/updateprofile/${record._id}`);
 
       const result = await response.data;
 
@@ -58,22 +49,22 @@ const Students = () => {
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (_, record) => (
-        <Popconfirm
-          title={`Are you sure to ${
-            record.status ? "deactivate" : "activate"
-          } this account?`}
-          onConfirm={() => handleToggleStatus(record)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Switch checked={record.status} />
-        </Popconfirm>
-      ),
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   render: (_, record) => (
+    //     <Popconfirm
+    //       title={`Are you sure to ${
+    //         record.status ? "deactivate" : "activate"
+    //       } this account?`}
+    //       onConfirm={() => handleToggleStatus(record)}
+    //       okText="Yes"
+    //       cancelText="No"
+    //     >
+    //       <Switch checked={record.status} />
+    //     </Popconfirm>
+    //   ),
+    // },
   ];
 
   return <Table rowKey="_id" columns={columns} dataSource={students || []} />;

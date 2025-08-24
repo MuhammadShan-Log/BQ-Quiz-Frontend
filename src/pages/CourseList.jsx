@@ -14,8 +14,6 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import api from "../utils/api";
 
-const API_URL = "http://localhost:5000/";
-
 const CourseList = () => {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
@@ -30,6 +28,8 @@ const CourseList = () => {
     try {
       const res = await api.get('/course');
       // adjust according to your API response
+      console.log("Courses: ", res);
+      
       setCourses(res ? res.data.data : []);
     } catch (error) {
       notification.error({
@@ -42,7 +42,6 @@ const CourseList = () => {
 
   useEffect(() => {
     fetchCourses();
-    console.log('userRole', userRole)
   }, []);
 
   // Open modal for Add/Edit
@@ -58,6 +57,8 @@ const CourseList = () => {
 
   // Save Course (Add/Edit)
   const handleSave = async () => {
+    console.log("Adding course");
+    
     try {
       const values = await form.validateFields();
 
@@ -70,11 +71,19 @@ const CourseList = () => {
 
         if (editingCourse) {
           // update course
-          await axios.post(`${API_URL}/${editingCourse._id}`, values);
+          console.log(editingCourse._id);
+          
+          const res = await api.put(`/course/${editingCourse._id}`, values);
+          console.log(res);
+          
           notification.success({ message: "Course updated successfully" });
         } else {
           // add new course
-          await axios.post(API_URL, values);
+          console.log("Adding course...");
+          const res = await api.post("/course", values);
+          console.log("Added course...");
+                    console.log(res);
+
           notification.success({ message: "Course added successfully" });
         }
       } else {
@@ -100,7 +109,7 @@ const CourseList = () => {
   // Delete course
   const handleDelete = async (id) => {
     try {
-      await axios.patch(`${API_URL}/${id}`);
+      await axios.patch(`/course/${id}`);
       notification.success({ message: "Course deleted successfully" });
       fetchCourses();
     } catch (error) {

@@ -26,7 +26,8 @@ const Signup = () => {
 
   const fetchAvailableCourses = async () => {
     try {
-      const res = await api.get("/course");
+      const res = await api.get("/course/list");
+      console.log(res);
       setAvailableCourses(res.data.data || []);
     } catch (error) {
       console.error("Failed to fetch courses:", error);
@@ -34,7 +35,7 @@ const Signup = () => {
   };
 
   useEffect(() => {
-    fetchAvailableCourses()
+    fetchAvailableCourses();
   }, []);
 
   const handleChange = (e) => {
@@ -103,13 +104,15 @@ const Signup = () => {
           return;
         }
 
-        if (
-          !formData.enrollmentCourseID ||
-          formData.enrollmentCourseID.trim() === ""
-        ) {
-          setMessage("Enrollment Course ID is required!");
-          setLoading(false);
-          return;
+        if (formData.role === "student") {
+          if (
+            !formData.enrollmentCourseID ||
+            formData.enrollmentCourseID.trim() === ""
+          ) {
+            setMessage("Enrollment Course ID is required!");
+            setLoading(false);
+            return;
+          }
         }
 
         const registrationData = {
@@ -240,7 +243,7 @@ const Signup = () => {
                 required
               />
 
-              {!isLogin && (
+              {!isLogin && formData.role === "student" && (
                 <select
                   name="enrollmentCourseID"
                   value={formData.enrollmentCourseID}
