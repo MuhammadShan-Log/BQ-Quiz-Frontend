@@ -2,7 +2,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Signup from "./pages/signup.jsx";
 import AdminLayout from "./layouts/AdminLayout.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
 import CourseList from "./pages/CourseList";
 import CourseManagement from "./pages/CourseManagement.jsx";
 import AddQuiz from "./pages/teacher/AddQuiz.jsx";
@@ -27,6 +26,8 @@ import CourseEnrollment from "./components/CourseEnrollment.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import ApiTest from "./components/ApiTest.jsx";
 import SimpleTest from "./components/SimpleTest.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
+import TeacherStudents from "./pages/TeacherStudents.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Signup /> },
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
       // Admin Routes
       { 
         path: "dashboard", 
-        element: <ProtectedRoute allowedRoles={["admin"]}><Dashboard /></ProtectedRoute> 
+        element: <ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute> 
       },
       { 
         path: "admin/course-assignment", 
@@ -82,6 +83,11 @@ const router = createBrowserRouter([
         path: "teacher/quizzes/list/:id/update", 
         element: <ProtectedRoute allowedRoles={["teacher"]}><UpdateQuiz /></ProtectedRoute> 
       },
+      { 
+        path: "teacher/getstudents", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherStudents/></ProtectedRoute> 
+      },
+
       
       // Student Routes
       { 

@@ -123,7 +123,7 @@ const AdminLayout = () => {
         {
           key: "students",
           icon: <UserOutlined />,
-          label: <Link to="/students">My Students</Link>,
+          label: <Link to="/teacher/getstudents">My Students</Link>,
         },
         {
           key: "profile",
