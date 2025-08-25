@@ -92,7 +92,6 @@ const AdminLayout = () => {
         {
           key: "teacher-courses",
           icon: <BookOutlined />,
-          label: "My Courses",
           label: <Link to="/teacher/courses">My Courses</Link>,
           // children: [
           //   {

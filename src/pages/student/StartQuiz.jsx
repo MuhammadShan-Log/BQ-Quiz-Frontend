@@ -41,11 +41,17 @@ const StartQuiz = () => {
       return;
     }
 
+  
     setSubmitting(true);
     try {
-      const { data } = await api.post(`/quizzes/quiz/${id}/submit`, {
-        answers,
+      const { data } = await api.post(`/quizzes/quiz/submit`, {
+        quizId: id,
+        answers: Object.entries(answers).map(([questionId, selectedOption]) => ({
+          questionId,
+          selectedOption,
+        })),
       });
+
       setResult(data);
       message.success("Quiz submitted!");
     } catch (err) {
@@ -127,7 +133,7 @@ const StartQuiz = () => {
         </div>
       </Card>
 
-      {result && (
+      {/* {result && (
         <Card title="Results" className="mt-4">
           <p>
             <strong>Score:</strong> {result.score} / {quiz.questions.length}
@@ -143,7 +149,7 @@ const StartQuiz = () => {
             ))}
           </ul>
         </Card>
-      )}
+      )} */}
     </div>
   );
 };
