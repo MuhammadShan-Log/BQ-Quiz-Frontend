@@ -169,10 +169,10 @@ const AdminLayout = () => {
               key: "quiz-list",
               label: <Link to="/quizzes/list">Available Quizzes</Link>,
             },
-            {
-              key: "start-quiz",
-              label: <Link to="/quizzes/quiz/:id/start">Start Quiz</Link>,
-            },
+            // {
+            //   key: "start-quiz",
+            //   label: <Link to="/quizzes/quiz/:id/start">Start Quiz</Link>,
+            // },
           ],
         },
         {
