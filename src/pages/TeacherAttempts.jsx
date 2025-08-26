@@ -23,9 +23,9 @@ const TeacherAttempts = () => {
   if (loading) return <Spin tip="Loading attempts..." />;
 
   const columns = [
-    { title: "Quiz", dataIndex: ["quiz", "title"], key: "quiz" },
-    { title: "Student", dataIndex: ["student", "name"], key: "student" },
-    { title: "Email", dataIndex: ["student", "email"], key: "email" },
+    { title: "Quiz", dataIndex: ["quizId", "title"], key: "quiz" },
+    { title: "Student", dataIndex: ["studentId", "name"], key: "student" },
+    { title: "Email", dataIndex: ["studentId", "email"], key: "email" },
     { title: "Score", dataIndex: "score", key: "score" },
     { title: "Submitted", dataIndex: "submittedAt", key: "submittedAt", render: (v) => new Date(v).toLocaleString() },
   ];
