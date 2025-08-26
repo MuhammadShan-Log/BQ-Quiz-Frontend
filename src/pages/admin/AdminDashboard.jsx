@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const fetchDashboard = async () => {
       try {
         const { data } = await api.get("/dashboard/admin");
-        setStats(data);
+        setStats(data?.data);
       } catch (err) {
         message.error(err.response?.data?.message || "Failed to fetch admin dashboard");
       } finally {

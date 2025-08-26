@@ -95,17 +95,13 @@ const router = createBrowserRouter([
         element: <ProtectedRoute allowedRoles={["student"]}><StudentDashboard /></ProtectedRoute> 
       },
       { 
-        path: "student/course-enrollment", 
-        element: <ProtectedRoute allowedRoles={["student"]}><CourseEnrollment /></ProtectedRoute> 
-      },
-      { 
         path: "student/quiz/:id/start", 
         element: <ProtectedRoute allowedRoles={["student"]}><StartQuiz /></ProtectedRoute> 
       },
       
       // General Routes (accessible to all roles)
       { path: "courses", element: <CourseList /> },
-      { path: "my-course", element: <MyCourses /> },
+      { path: "my-course", element: <ProtectedRoute allowedRoles={["student"]}><MyCourses /></ProtectedRoute> },
       { path: "quizzes/add", element: <AddQuiz /> },
       { path: "quizzes/list", element: <QuizList /> },
       { path: "quizzes/list/:id", element: <QuizDetail /> },

@@ -26,6 +26,7 @@ const CourseAssignment = () => {
   const [students, setStudents] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState("teacher"); // 'teacher' | 'student'
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -62,9 +63,12 @@ const CourseAssignment = () => {
         teacherId: values.teacherId,
       };
       if (values.campusId) {
-        payload.campusId = values.campusId; // only if user entered something
+        payload.campusId = values.campusId;
       }
 
+      console.log("Assign Teacher Payload:", payload); 
+
+     
       const response = await api.post("/course/assign-teacher", payload);
 
       toast.success(response.data?.message || "Teacher assigned successfully!");
@@ -81,9 +85,6 @@ const CourseAssignment = () => {
     } finally {
       setLoading(false);
     }
-
- 
-
   };
 
 
@@ -120,11 +121,7 @@ const CourseAssignment = () => {
   const showModal = (type, record = null) => {
     setModalType(type);
     setIsModalVisible(true);
-    form.resetFields();
-    if (record?._id) {
-      // Pre-select the course when opening from row action
-      form.setFieldsValue({ courseId: record._id });
-    }
+    setSelectedCourseId(record?._id || null);
   };
 
   const handleModalOk = () => {
@@ -248,8 +245,10 @@ const CourseAssignment = () => {
         destroyOnClose
       >
         <Form
+          key={`${modalType}-${selectedCourseId || "new"}`}
           form={form}
           layout="vertical"
+          initialValues={{ courseId: selectedCourseId || undefined }}
           onFinish={
             modalType === "teacher" ? handleAssignTeacher : handleAssignStudent
           }

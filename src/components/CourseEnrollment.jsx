@@ -83,42 +83,36 @@ const CourseEnrollment = () => {
   const courseColumns = [
     {
       title: 'Course',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => (
+      dataIndex: 'courseName',
+      key: 'courseName',
+      render: (_, record) => (
         <div>
-          <div className="font-medium">{text}</div>
-          <div className="text-sm text-gray-500">{record.description}</div>
+          <div className="font-medium">{record.courseName}</div>
+          <div className="text-sm text-gray-500">{record.courseDescription}</div>
         </div>
       )
     },
     {
       title: 'Teacher',
-      dataIndex: 'teacherName',
-      key: 'teacherName',
-      render: (text, record) => (
+      key: 'teacher',
+      render: (_, record) => (
         <Space>
           <UserOutlined />
-          <span>{text || 'Not assigned yet'}</span>
+          <span>{record.teacher?.name || 'Not assigned yet'}</span>
         </Space>
       )
     },
     {
-      title: 'Duration',
-      dataIndex: 'duration',
-      key: 'duration',
-      render: (duration) => duration ? `${duration} weeks` : 'Not specified'
+      title: 'Timings',
+      dataIndex: 'timings',
+      key: 'timings',
+      render: (timings) => timings || 'Not specified'
     },
     {
-      title: 'Enrollment Time',
-      dataIndex: 'enrollmentTime',
-      key: 'enrollmentTime',
-      render: (time, record) => {
-        if (record.isEnrolled) {
-          return time ? new Date(time).toLocaleString() : 'Recently enrolled';
-        }
-        return 'Not enrolled';
-      }
+      title: 'Days',
+      dataIndex: 'days',
+      key: 'days',
+      render: (days) => days || 'Not specified'
     },
     {
       title: 'Actions',
@@ -151,23 +145,21 @@ const CourseEnrollment = () => {
   const enrolledColumns = [
     {
       title: 'Course',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => (
+      key: 'course',
+      render: (_, record) => (
         <div>
-          <div className="font-medium">{text}</div>
-          <div className="text-sm text-gray-500">{record.description}</div>
+          <div className="font-medium">{record.course?.courseName}</div>
+          <div className="text-sm text-gray-500">{record.course?.courseDescription}</div>
         </div>
       )
     },
     {
       title: 'Teacher',
-      dataIndex: 'teacherName',
-      key: 'teacherName',
-      render: (text, record) => (
+      key: 'teacher',
+      render: (_, record) => (
         <Space>
           <UserOutlined />
-          <span>{text || 'Not assigned yet'}</span>
+          <span>{record.teacher?.name || 'Not assigned yet'}</span>
         </Space>
       )
     },
@@ -180,7 +172,7 @@ const CourseEnrollment = () => {
     {
       title: 'Status',
       key: 'status',
-      render: (_, record) => (
+      render: () => (
         <Tag color="green">Enrolled</Tag>
       )
     }
@@ -204,7 +196,7 @@ const CourseEnrollment = () => {
             <Select placeholder="Select course to enroll" loading={loading}>
               {filteredCourses.map(course => (
                 <Option key={course._id} value={course._id}>
-                  {course.name}
+                  {course.courseName}
                 </Option>
               ))}
             </Select>
@@ -290,16 +282,19 @@ const CourseEnrollment = () => {
         {selectedCourse && (
           <Descriptions column={1} bordered>
             <Descriptions.Item label="Course Name">
-              {selectedCourse.name}
+              {selectedCourse.courseName}
             </Descriptions.Item>
             <Descriptions.Item label="Description">
-              {selectedCourse.description || 'No description available'}
+              {selectedCourse.courseDescription || 'No description available'}
             </Descriptions.Item>
-            <Descriptions.Item label="Duration">
-              {selectedCourse.duration ? `${selectedCourse.duration} weeks` : 'Not specified'}
+            <Descriptions.Item label="Timings">
+              {selectedCourse.timings || 'Not specified'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Days">
+              {selectedCourse.days || 'Not specified'}
             </Descriptions.Item>
             <Descriptions.Item label="Teacher">
-              {selectedCourse.teacherName || 'Not assigned yet'}
+              {selectedCourse.teacher?.name || 'Not assigned yet'}
             </Descriptions.Item>
             <Descriptions.Item label="Course ID">
               {selectedCourse._id}

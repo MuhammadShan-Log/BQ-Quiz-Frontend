@@ -11,7 +11,7 @@ const StudentDashboard = () => {
     const fetchDashboard = async () => {
       try {
         const { data } = await api.get("/dashboard/student");
-        setStats(data);
+        setStats(data?.data);
       } catch (err) {
         message.error(err.response?.data?.message || "Failed to fetch student dashboard");
       } finally {

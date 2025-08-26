@@ -157,12 +157,7 @@ const AdminLayout = () => {
               key: "my-courses",
               label: <Link to="/my-course">My Courses</Link>,
             },
-            {
-              key: "course-enrollment",
-              label: (
-                <Link to="/student/course-enrollment">Enroll in Courses</Link>
-              ),
-            },
+     
           ],
         },
         {
