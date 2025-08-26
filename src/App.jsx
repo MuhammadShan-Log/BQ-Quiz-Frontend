@@ -28,6 +28,7 @@ import ApiTest from "./components/ApiTest.jsx";
 import SimpleTest from "./components/SimpleTest.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import TeacherStudents from "./pages/TeacherStudents.jsx";
+import TeacherAttempts from "./pages/TeacherAttempts.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <Signup /> },
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
       { 
         path: "teacher/getstudents", 
         element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherStudents/></ProtectedRoute> 
+      },
+      { 
+        path: "teacher/attempts", 
+        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherAttempts /></ProtectedRoute> 
       },
 
       

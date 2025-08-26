@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Card, Spin, Radio, Space, Button, message, Steps } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card, Spin, Radio, Space, Button, message, Steps, Modal } from "antd";
 import api from "../../utils/api";
 
 const StartQuiz = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [current, setCurrent] = useState(0);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -41,7 +43,6 @@ const StartQuiz = () => {
       return;
     }
 
-  
     setSubmitting(true);
     try {
       const { data } = await api.post(`/quizzes/quiz/submit`, {
@@ -53,7 +54,7 @@ const StartQuiz = () => {
       });
 
       setResult(data);
-      message.success("Quiz submitted!");
+      setSuccessModalOpen(true);
     } catch (err) {
       console.error(err);
       message.error("Submission failed.");
@@ -133,23 +134,21 @@ const StartQuiz = () => {
         </div>
       </Card>
 
-      {/* {result && (
-        <Card title="Results" className="mt-4">
+      <Modal
+        open={successModalOpen}
+        onOk={() => navigate("/student/dashboard")}
+        onCancel={() => navigate("/student/dashboard")}
+        okText="Go to Dashboard"
+        cancelText="Close"
+        title="Quiz Submitted"
+      >
+        <p>Your quiz has been submitted successfully.</p>
+        {result && (
           <p>
-            <strong>Score:</strong> {result.score} / {quiz.questions.length}
+            Score: {result.score} / {quiz.questions.length}
           </p>
-          <ul className="list-disc ml-5">
-            {result.details?.map((item, i) => (
-              <li key={i}>
-                Q{i + 1}:{" "}
-                {item.correct
-                  ? "✅ Correct"
-                  : `❌ Wrong (Correct Answer: ${item.correctAnswer})`}
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )} */}
+        )}
+      </Modal>
     </div>
   );
 };
