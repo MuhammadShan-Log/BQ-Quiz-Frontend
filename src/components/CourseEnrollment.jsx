@@ -31,8 +31,8 @@ const CourseEnrollment = () => {
 
       console.log("Enrollment API Responses:", { coursesRes, enrolledRes }); // Debug log
 
-      setCourses(coursesRes.data?.courses || []);
-      setEnrolledCourses(enrolledRes.data?.courses || []);
+      setCourses(coursesRes.data?.data || []);
+      setEnrolledCourses(enrolledRes.data?.data || []);
     } catch (error) {
       console.error("Error fetching enrollment data:", error);
       message.error(`Failed to fetch data: ${error.message}`);
@@ -74,9 +74,9 @@ const CourseEnrollment = () => {
 
   // Filter courses based on search text and exclude already enrolled courses
   const filteredCourses = courses.filter(course => {
-    const isNotEnrolled = !enrolledCourses.some(enrolled => enrolled._id === course._id);
-    const matchesSearch = course.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                         course.description?.toLowerCase().includes(searchText.toLowerCase());
+    const isNotEnrolled = !enrolledCourses.some(enrolled => enrolled.course?._id === course._id);
+    const matchesSearch = course.courseName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                         course.courseDescription?.toLowerCase().includes(searchText.toLowerCase());
     return isNotEnrolled && matchesSearch;
   });
 
