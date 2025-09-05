@@ -31,23 +31,23 @@ const Students = () => {
 
   const handleToggleStatus = async (record) => {
     try {
-      const response = await api.patch(`auth/updateprofile/${record._id}`);
+      const response = await api.patch(`/auth/updateprofile/${record._id}`, {
+        status: !record.status,
+      });
 
-      const result = await response.data;
-
-      if (response.ok) {
-        message.success(result.message || "Status updated successfully!");
+      if (response.status === 200) {
+        message.success("Status updated successfully!");
         setStudents((prev) =>
           prev.map((item) =>
             item._id === record._id ? { ...item, status: !item.status } : item
           )
         );
       } else {
-        message.error(result.message || "Failed to update status");
+        message.error("Failed to update status");
       }
     } catch (error) {
       console.error("Update error:", error);
-      message.error("Server error while updating status");
+      message.error(error.response?.data?.message || "Server error while updating status");
     }
   };
 

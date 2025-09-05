@@ -51,7 +51,7 @@ const TeacherDashboard = () => {
 
         // Fetch recent students
         try {
-          const studentsRes = await api.get("/teacher/getstudents");
+          const studentsRes = await api.get("/course/teacher/getstudents");
           setRecentStudents(studentsRes.data?.data?.slice(0, 5) || []);
         } catch (err) {
           console.log("Could not fetch recent students:", err);

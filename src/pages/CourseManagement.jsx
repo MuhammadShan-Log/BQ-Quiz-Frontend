@@ -28,7 +28,7 @@ const CourseManagement = () => {
     try {
       setLoading(true);
       const res = await api.get('/course/list');
-      setCourses(res.data.courses || []);
+      setCourses(res.data.data || []);
     } catch (error) {
       message.error('Failed to fetch courses');
       console.error(error);
@@ -69,7 +69,7 @@ const CourseManagement = () => {
         console.log("Update response:", response); // Debug log
         message.success('Course updated successfully!');
       } else {
-        const response = await api.post('/course/create', values);
+        const response = await api.post('/course', values);
         console.log("Create response:", response); // Debug log
         message.success('Course created successfully!');
       }
@@ -93,7 +93,7 @@ const CourseManagement = () => {
       cancelText: 'No',
       onOk: async () => {
         try {
-          await api.delete(`/course/${courseId}`);
+          await api.patch(`/course/${courseId}`);
           message.success('Course deleted successfully!');
           fetchCourses();
         } catch (error) {
