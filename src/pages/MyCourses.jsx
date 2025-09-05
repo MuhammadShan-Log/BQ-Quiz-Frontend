@@ -34,26 +34,69 @@ const MyCourses = () => {
   }
 
   return (
-    <div className="p-6">
-      <Title level={2} className="mb-6">
-        <BookOutlined className="mr-2" />
-        My Enrolled Courses
-      </Title>
+    <div className="enhanced-content space-y-6">
+      {/* Header */}
+      <Card className="enhanced-card">
+        <div className="enhanced-card-header">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+              <BookOutlined className="text-2xl text-white" />
+            </div>
+            <div>
+              <Title level={2} className="text-white mb-0">
+                My Enrolled Courses
+              </Title>
+              <Text className="text-green-100">
+                View and manage your enrolled courses
+              </Text>
+            </div>
+          </div>
+        </div>
+      </Card>
 
       {courses.length === 0 ? (
-        <Card className="text-center">
-          <Text type="secondary">You haven't enrolled in any courses yet.</Text>
+        <Card className="enhanced-card text-center py-20">
+          <div className="text-gray-500">
+            <div className="w-24 h-24 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <BookOutlined className="text-4xl text-teal-600" />
+            </div>
+            <Title level={3} className="text-gray-700 mb-3">
+              No Courses Enrolled
+            </Title>
+            <Text className="text-gray-500 text-lg mb-6 block">
+              You haven't enrolled in any courses yet.
+            </Text>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 max-w-md mx-auto">
+              <div className="flex items-start space-x-3">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-white text-xs font-bold">i</span>
+                </div>
+                <div className="text-left">
+                  <Text className="text-blue-800 font-medium block mb-2">Get Started:</Text>
+                  <ul className="text-blue-700 text-sm space-y-1">
+                    <li>• Contact your teacher for course enrollment</li>
+                    <li>• Check available courses in the course list</li>
+                    <li>• Ask your administrator for help</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </Card>
       ) : (
         <Row gutter={[16, 16]}>
           {courses.map((enrollment) => (
             <Col xs={24} sm={12} lg={8} key={enrollment._id}>
               <Card 
-                className="h-full shadow-md hover:shadow-lg transition-shadow"
+                className="enhanced-card h-full hover:scale-105 transition-all duration-300"
                 title={
-                  <div className="flex items-center">
-                    <BookOutlined className="mr-2 text-blue-500" />
-                    {enrollment.course?.courseName || 'Course Name Not Available'}
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
+                      <BookOutlined className="text-teal-600" />
+                    </div>
+                    <span className="font-semibold text-gray-800">
+                      {enrollment.course?.courseName || 'Course Name Not Available'}
+                    </span>
                   </div>
                 }
               >
@@ -107,7 +150,7 @@ const MyCourses = () => {
                   )}
 
                   <div className="pt-2">
-                    <Tag color="green">Enrolled</Tag>
+                    <Tag color="green" icon={<BookOutlined />}>Enrolled</Tag>
                   </div>
                 </div>
               </Card>
