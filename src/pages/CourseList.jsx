@@ -9,10 +9,17 @@ import {
   Popconfirm,
   Switch,
   notification,
+  Card,
+  Typography,
+  Row,
+  Col,
+  Statistic,
 } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, DeleteOutlined, BookOutlined } from "@ant-design/icons";
 import axios from "axios";
 import api from "../utils/api";
+
+const { Title, Text } = Typography;
 
 const CourseList = () => {
   const [loading, setLoading] = useState(false);
@@ -179,26 +186,54 @@ console.log("userRole is:", userRole);
 
 
   return (
-    <div>
-      <Space style={{ marginBottom: 16 }}>
-        {userRole == "admin" && (
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => openModal()}
-          >
-            Add Course
-          </Button>
-        )}
-      </Space>
+    <div className="enhanced-content space-y-6">
+      {/* Header */}
+      <Card className="enhanced-card">
+        <div className="enhanced-card-header">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <BookOutlined className="text-2xl text-white" />
+              </div>
+              <div>
+                <Title level={2} className="text-white mb-0">
+                  Course Management
+                </Title>
+                <Text className="text-green-100">
+                  Manage and organize your courses
+                </Text>
+              </div>
+            </div>
+            {userRole == "admin" && (
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                className="enhanced-btn"
+                onClick={() => openModal()}
+              >
+                Add Course
+              </Button>
+            )}
+          </div>
+        </div>
+      </Card>
 
-      <Table
-        rowKey="_id"
-        loading={loading}
-        columns={columns}
-        dataSource={courses}
-        bordered
-      />
+      <Card className="enhanced-card">
+        <Table
+          rowKey="_id"
+          loading={loading}
+          columns={columns}
+          dataSource={courses}
+          className="enhanced-table"
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} courses`,
+          }}
+        />
+      </Card>
 
       {/* Add/Edit Modal */}
       <Modal
@@ -218,7 +253,7 @@ console.log("userRole is:", userRole);
               { min: 3, message: "Course name must be at least 3 characters" },
             ]}
           >
-            <Input />
+            <Input className="enhanced-input" />
           </Form.Item>
 
           {/* Course Description */}
@@ -230,7 +265,7 @@ console.log("userRole is:", userRole);
               { min: 5, message: "Description must be at least 5 characters" },
             ]}
           >
-            <Input.TextArea rows={3} />
+            <Input.TextArea rows={3} className="enhanced-input" />
           </Form.Item>
 
           {/* Course Code */}
@@ -239,7 +274,7 @@ console.log("userRole is:", userRole);
             name="courseCode"
             rules={[{ required: true, message: "Course code is required" }]}
           >
-            <Input />
+            <Input className="enhanced-input" />
           </Form.Item>
 
           {/* Timings */}
@@ -248,7 +283,7 @@ console.log("userRole is:", userRole);
             name="timings"
             rules={[{ required: true, message: "Course timings are required" }]}
           >
-            <Input />
+            <Input className="enhanced-input" />
           </Form.Item>
 
           {/* Days */}
@@ -257,7 +292,7 @@ console.log("userRole is:", userRole);
             name="days"
             rules={[{ required: true, message: "Course days are required" }]}
           >
-            <Input />
+            <Input className="enhanced-input" />
           </Form.Item>
 
           {/* Created By (User ID) */}

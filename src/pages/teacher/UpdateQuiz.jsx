@@ -11,10 +11,16 @@ import {
   message,
   Radio,
   Spin,
+  Typography,
+  Avatar,
+  Row,
+  Col,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, FileTextOutlined, ArrowLeftOutlined, SaveOutlined } from "@ant-design/icons";
 import api from "../../utils/api";
 import { toast } from "react-toastify";
+
+const { Title, Text } = Typography;
 
 const UpdateQuiz = () => {
   const { id } = useParams();
@@ -72,132 +78,203 @@ const UpdateQuiz = () => {
     }
   };
 
-  if (loading) return <Spin tip="Loading quiz..." />;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="text-center">
+          <Spin size="large" />
+          <p className="mt-4 text-gray-600">Loading quiz...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Update Quiz</h1>
+    <div className="enhanced-content space-y-6">
+      {/* Header */}
+      <Card className="enhanced-card">
+        <div className="enhanced-card-header">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <FileTextOutlined className="text-2xl text-white" />
+              </div>
+              <div>
+                <Title level={2} className="text-white mb-0">
+                  Update Quiz
+                </Title>
+                <Text className="text-green-100">
+                  Modify your quiz questions and settings
+                </Text>
+              </div>
+            </div>
+            <Button
+              icon={<ArrowLeftOutlined />}
+              className="hover:border-primary-teal hover:text-primary-teal"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
+          </div>
+        </div>
+      </Card>
 
-      <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item
-          label="Quiz Title"
-          name="title"
-          rules={[{ required: true, message: "Please enter quiz title" }]}
-        >
-          <Input size="large" />
-        </Form.Item>
+      <Card className="enhanced-card">
+        <Form form={form} layout="vertical" onFinish={onFinish}>
+          <Form.Item
+            label="Quiz Title"
+            name="title"
+            rules={[{ required: true, message: "Please enter quiz title" }]}
+          >
+            <Input size="large" className="enhanced-input" />
+          </Form.Item>
 
-        {/* CSV Upload */}
-        <Divider>Upload CSV Questions (optional)</Divider>
-        <Upload
-          beforeUpload={(file) => {
-            setCsvFile(file);
-            return false;
-          }}
-          accept=".csv"
-          maxCount={1}
-        >
-          <Button icon={<UploadOutlined />}>Select CSV File</Button>
-        </Upload>
-        {csvFile && <p className="mt-2">Selected file: {csvFile.name}</p>}
+          {/* CSV Upload */}
+          <Divider>Upload CSV Questions (optional)</Divider>
+          <Upload
+            beforeUpload={(file) => {
+              setCsvFile(file);
+              return false;
+            }}
+            accept=".csv"
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />} className="enhanced-btn">Select CSV File</Button>
+          </Upload>
+          {csvFile && (
+            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <Text className="text-green-800">Selected file: {csvFile.name}</Text>
+            </div>
+          )}
 
-        <Divider>Edit Questions</Divider>
-        <Form.List name="questions">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }, index) => (
-                <Card
-                  key={key}
-                  title={`Q${index + 1}`}
-                  className="mb-4"
-                  size="small"
-                  style={{ padding: "16px" }}
-                >
-                  <Form.Item
-                    {...restField}
-                    label="Question Text"
-                    name={[name, "questionText"]}
-                    rules={[{ required: true, message: "Enter question text" }]}
+          <Divider>Edit Questions</Divider>
+          <Form.List name="questions">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }, index) => (
+                  <Card
+                    key={key}
+                    title={
+                      <div className="flex items-center space-x-2">
+                        <Avatar size={24} style={{ background: "#14b8a6" }}>
+                          {index + 1}
+                        </Avatar>
+                        <span>Question {index + 1}</span>
+                      </div>
+                    }
+                    className="enhanced-card mb-4"
+                    size="small"
                   >
-                    <Input />
-                  </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      label="Question Text"
+                      name={[name, "questionText"]}
+                      rules={[{ required: true, message: "Enter question text" }]}
+                    >
+                      <Input className="enhanced-input" />
+                    </Form.Item>
 
-                  <Space direction="vertical" className="mb-2">
-                    {["a", "b", "c", "d"].map((opt) => (
-                      <Form.Item
-                        key={opt}
-                        label={`Option ${opt.toUpperCase()}`}
-                        name={[name, "options", opt]}
-                        rules={[
-                          { required: true, message: "Enter option text" },
-                        ]}
-                      >
-                        <Input />
-                      </Form.Item>
-                    ))}
-                  </Space>
-
-                  <Form.Item
-                    label="Correct Answer"
-                    name={[name, "correctAnswer"]}
-                    rules={[
-                      { required: true, message: "Select correct answer" },
-                    ]}
-                  >
-                    <Radio.Group>
+                    <Space direction="vertical" className="mb-2">
                       {["a", "b", "c", "d"].map((opt) => (
-                        <Radio key={opt} value={opt}>
-                          {opt.toUpperCase()}
-                        </Radio>
+                        <Form.Item
+                          key={opt}
+                          label={`Option ${opt.toUpperCase()}`}
+                          name={[name, "options", opt]}
+                          rules={[
+                            { required: true, message: "Enter option text" },
+                          ]}
+                        >
+                          <Input className="enhanced-input" />
+                        </Form.Item>
                       ))}
-                    </Radio.Group>
-                  </Form.Item>
+                    </Space>
 
-                  <Button type="dashed" danger onClick={() => remove(name)}>
-                    Remove Question
-                  </Button>
-                </Card>
+                    <Form.Item
+                      label="Correct Answer"
+                      name={[name, "correctAnswer"]}
+                      rules={[
+                        { required: true, message: "Select correct answer" },
+                      ]}
+                    >
+                      <Radio.Group>
+                        {["a", "b", "c", "d"].map((opt) => (
+                          <Radio key={opt} value={opt}>
+                            {opt.toUpperCase()}
+                          </Radio>
+                        ))}
+                      </Radio.Group>
+                    </Form.Item>
+
+                    <Button 
+                      type="dashed" 
+                      danger 
+                      onClick={() => remove(name)}
+                      className="hover:border-red-500 hover:text-red-500"
+                    >
+                      Remove Question
+                    </Button>
+                  </Card>
               ))}
-              <Button type="dashed" onClick={() => add()} className="mb-4">
-                Add Question
-              </Button>
-            </>
-          )}
-        </Form.List>
+                <Button 
+                  type="dashed" 
+                  onClick={() => add()} 
+                  className="mb-4 hover:border-primary-teal hover:text-primary-teal"
+                >
+                  Add Question
+                </Button>
+              </>
+            )}
+          </Form.List>
 
-        <Divider>Custom Questions</Divider>
-        <Form.List name="customQuestions">
-          {(fields, { add, remove }) => (
-            <>
-              {fields.map(({ key, name, ...restField }) => (
-                <Space key={key} align="baseline" className="mb-2">
-                  <Form.Item
-                    {...restField}
-                    name={name}
-                    rules={[
-                      { required: true, message: "Enter custom question" },
-                    ]}
-                  >
-                    <Input placeholder="Custom question" />
-                  </Form.Item>
-                  <Button type="link" danger onClick={() => remove(name)}>
-                    Remove
-                  </Button>
-                </Space>
-              ))}
-              <Button type="dashed" onClick={() => add()}>
-                Add Custom Question
-              </Button>
-            </>
-          )}
-        </Form.List>
+          <Divider>Custom Questions</Divider>
+          <Form.List name="customQuestions">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Space key={key} align="baseline" className="mb-2">
+                    <Form.Item
+                      {...restField}
+                      name={name}
+                      rules={[
+                        { required: true, message: "Enter custom question" },
+                      ]}
+                    >
+                      <Input placeholder="Custom question" className="enhanced-input" />
+                    </Form.Item>
+                    <Button 
+                      type="link" 
+                      danger 
+                      onClick={() => remove(name)}
+                      className="hover:text-red-500"
+                    >
+                      Remove
+                    </Button>
+                  </Space>
+                ))}
+                <Button 
+                  type="dashed" 
+                  onClick={() => add()}
+                  className="hover:border-primary-teal hover:text-primary-teal"
+                >
+                  Add Custom Question
+                </Button>
+              </>
+            )}
+          </Form.List>
 
-        <Form.Item className="mt-6">
-          <Button type="primary" size="large" htmlType="submit">
-            Update Quiz
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item className="mt-6">
+            <Button 
+              type="primary" 
+              size="large" 
+              htmlType="submit"
+              className="enhanced-btn"
+              icon={<SaveOutlined />}
+            >
+              Update Quiz
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

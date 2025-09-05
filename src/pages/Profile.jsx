@@ -24,7 +24,13 @@ const Profile = () => {
     fetchProfile();
   }, []);
 
-  if (loading) return <Loading/>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <Loading />
+      </div>
+    );
+  }
 
   return <UpdateProfileForm user={user} />;
 };

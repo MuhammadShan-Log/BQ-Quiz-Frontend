@@ -31,95 +31,122 @@ import TeacherStudents from "./pages/TeacherStudents.jsx";
 import TeacherAttempts from "./pages/TeacherAttempts.jsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Signup /> },
-  {
-    path: "/",
-    element: <AdminLayout />,
-    errorElement: <NotFound />,
-    children: [
-      // Admin Routes
-      { 
-        path: "dashboard", 
-        element: <ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute> 
-      },
-      { 
-        path: "admin/course-assignment", 
-        element: <ProtectedRoute allowedRoles={["admin"]}><CourseAssignment /></ProtectedRoute> 
-      },
-      { 
-        path: "admin/course-management", 
-        element: <ProtectedRoute allowedRoles={["admin"]}><CourseManagement /></ProtectedRoute> 
-      },
-      { 
-        path: "admin/api-test", 
-        element: <ProtectedRoute allowedRoles={["admin"]}><ApiTest /></ProtectedRoute> 
-      },
-      { 
-        path: "test", 
-        element: <SimpleTest />
-      },
-      
-      // Teacher Routes
-      { 
-        path: "teacher/dashboard", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherDashboard /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/courses", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><CourseList /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/quizzes/add", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><AddQuiz /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/quizzes/list", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><QuizList /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/quizzes/list/:id", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><QuizDetail /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/quizzes/list/:id/update", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><UpdateQuiz /></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/getstudents", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherStudents/></ProtectedRoute> 
-      },
-      { 
-        path: "teacher/attempts", 
-        element: <ProtectedRoute allowedRoles={["teacher"]}><TeacherAttempts /></ProtectedRoute> 
-      },
-
-      
-      // Student Routes
-      { 
-        path: "student/dashboard", 
-        element: <ProtectedRoute allowedRoles={["student"]}><StudentDashboard /></ProtectedRoute> 
-      },
-      { 
-        path: "student/quiz/:id/start", 
-        element: <ProtectedRoute allowedRoles={["student"]}><StartQuiz /></ProtectedRoute> 
-      },
-      
-      // General Routes (accessible to all roles)
-      { path: "courses", element: <CourseList /> },
-      { path: "my-course", element: <ProtectedRoute allowedRoles={["student"]}><MyCourses /></ProtectedRoute> },
-      { path: "quizzes/add", element: <AddQuiz /> },
-      { path: "quizzes/list", element: <QuizList /> },
-      { path: "quizzes/list/:id", element: <QuizDetail /> },
-      { path: "quizzes/list/:id/update", element: <UpdateQuiz /> },
-      { path: "quizzes/quiz/:id/start", element: <StartQuiz /> },
-      { path: "students", element: <Students /> },
-      { path: "teachers", element: <Teachers /> },
-      { path: "profile", element: <Profile /> },
-      { path: "change-password", element: <ChangePassword /> },
-      { path: "logout", element: <Logout /> },
-      { path: "*", element: <NotFound /> },
-    ],
+  { 
+    path: "/", 
+    element: <Signup /> 
   },
+  {
+    path: "/dashboard",
+    element: <ProtectedRoute allowedRoles={["admin"]}><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/admin/course-assignment",
+    element: <ProtectedRoute allowedRoles={["admin"]}><AdminLayout><CourseAssignment /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/admin/course-management",
+    element: <ProtectedRoute allowedRoles={["admin"]}><AdminLayout><CourseManagement /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/admin/api-test",
+    element: <ProtectedRoute allowedRoles={["admin"]}><AdminLayout><ApiTest /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/test",
+    element: <AdminLayout><SimpleTest /></AdminLayout>
+  },
+  {
+    path: "/teacher/dashboard",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><TeacherDashboard /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/courses",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><CourseList /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/quizzes/add",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><AddQuiz /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/quizzes/list",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><QuizList /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/quizzes/list/:id",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><QuizDetail /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/quizzes/list/:id/update",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><UpdateQuiz /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/getstudents",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><TeacherStudents /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/teacher/attempts",
+    element: <ProtectedRoute allowedRoles={["teacher"]}><AdminLayout><TeacherAttempts /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/student/dashboard",
+    element: <ProtectedRoute allowedRoles={["student"]}><AdminLayout><StudentDashboard /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/student/quiz/:id/start",
+    element: <ProtectedRoute allowedRoles={["student"]}><AdminLayout><StartQuiz /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/courses",
+    element: <AdminLayout><CourseList /></AdminLayout>
+  },
+  {
+    path: "/my-course",
+    element: <ProtectedRoute allowedRoles={["student"]}><AdminLayout><MyCourses /></AdminLayout></ProtectedRoute>
+  },
+  {
+    path: "/quizzes/add",
+    element: <AdminLayout><AddQuiz /></AdminLayout>
+  },
+  {
+    path: "/quizzes/list",
+    element: <AdminLayout><QuizList /></AdminLayout>
+  },
+  {
+    path: "/quizzes/list/:id",
+    element: <AdminLayout><QuizDetail /></AdminLayout>
+  },
+  {
+    path: "/quizzes/list/:id/update",
+    element: <AdminLayout><UpdateQuiz /></AdminLayout>
+  },
+  {
+    path: "/quizzes/quiz/:id/start",
+    element: <AdminLayout><StartQuiz /></AdminLayout>
+  },
+  {
+    path: "/students",
+    element: <AdminLayout><Students /></AdminLayout>
+  },
+  {
+    path: "/teachers",
+    element: <AdminLayout><Teachers /></AdminLayout>
+  },
+  {
+    path: "/profile",
+    element: <AdminLayout><Profile /></AdminLayout>
+  },
+  {
+    path: "/change-password",
+    element: <AdminLayout><ChangePassword /></AdminLayout>
+  },
+  {
+    path: "/logout",
+    element: <AdminLayout><Logout /></AdminLayout>
+  },
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 
 function App() {
