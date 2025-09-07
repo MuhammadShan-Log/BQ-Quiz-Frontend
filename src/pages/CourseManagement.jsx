@@ -28,7 +28,7 @@ const CourseManagement = () => {
     try {
       setLoading(true);
       const res = await api.get('/course/list');
-      setCourses(res.data.courses || []);
+      setCourses(res.data.data || []);
     } catch (error) {
       message.error('Failed to fetch courses');
       console.error(error);
@@ -69,7 +69,7 @@ const CourseManagement = () => {
         console.log("Update response:", response); // Debug log
         message.success('Course updated successfully!');
       } else {
-        const response = await api.post('/course/create', values);
+        const response = await api.post('/course', values);
         console.log("Create response:", response); // Debug log
         message.success('Course created successfully!');
       }
@@ -93,7 +93,7 @@ const CourseManagement = () => {
       cancelText: 'No',
       onOk: async () => {
         try {
-          await api.delete(`/course/${courseId}`);
+          await api.patch(`/course/${courseId}`);
           message.success('Course deleted successfully!');
           fetchCourses();
         } catch (error) {
@@ -202,31 +202,49 @@ const CourseManagement = () => {
   ];
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Course Management</h1>
-        <p className="text-gray-600">Manage all courses in the system</p>
-      </div>
+    <div className="enhanced-content space-y-6">
+      {/* Header */}
+      <Card className="enhanced-card">
+        <div className="enhanced-card-header">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <BookOutlined className="text-2xl text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white mb-0">Course Management</h1>
+                <p className="text-green-100 mb-0">Manage all courses in the system</p>
+              </div>
+            </div>
+            <Button 
+              type="primary" 
+              icon={<PlusOutlined />}
+              className="enhanced-btn"
+              onClick={() => showModal()}
+            >
+              Add New Course
+            </Button>
+          </div>
+        </div>
+      </Card>
 
-      <Card 
-        title="All Courses" 
-        className="shadow-md"
-        extra={
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />}
-            onClick={() => showModal()}
-          >
-            Add New Course
-          </Button>
-        }
-      >
+      <Card className="enhanced-card">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 mb-0">All Courses</h3>
+        </div>
         <Table 
           columns={columns} 
           dataSource={courses}
           loading={loading}
           rowKey="_id"
-          pagination={{ pageSize: 10 }}
+          pagination={{ 
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} courses`,
+          }}
+          className="enhanced-table"
         />
       </Card>
 
@@ -286,10 +304,18 @@ const CourseManagement = () => {
 
           <Form.Item className="mb-0">
             <Space>
-              <Button type="primary" htmlType="submit" loading={loading}>
+              <Button 
+                type="primary" 
+                htmlType="submit" 
+                loading={loading}
+                className="enhanced-btn"
+              >
                 {editingCourse ? 'Update Course' : 'Create Course'}
               </Button>
-              <Button onClick={handleModalCancel}>
+              <Button 
+                onClick={handleModalCancel}
+                className="hover:border-primary-teal hover:text-primary-teal"
+              >
                 Cancel
               </Button>
             </Space>
