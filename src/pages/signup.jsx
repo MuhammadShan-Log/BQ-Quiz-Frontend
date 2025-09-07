@@ -150,7 +150,7 @@ const Signup = () => {
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center p-3 bg-teal-100 rounded-full shadow-md mb-4">
             <img
-              src="/public/logo.png"
+              src="/logo.png"
               alt="Logo"
               className="h-20 w-auto transition-transform hover:scale-105"
             />
